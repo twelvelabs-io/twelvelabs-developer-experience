@@ -10,10 +10,10 @@ Get started with these self-contained Jupyter notebooks containing complete, exe
 
 | Capability | Description | Try it |
 |------|-------------|---------|
-| Search | Find specific moments in your videos using text or image queries.| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./assets/TwelveLabs_Quickstart_Search.ipynb) |
-| Classify | Categorize video content based on your criteria. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./assets/TwelveLabs_Quickstart_Classify.ipynb) |
-| Generate | Generate text descriptions for your videos. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./assets/TwelveLabs_Quickstart_Generate.ipynb) |
-| Embed | Create multimodal embeddings. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./assets/TwelveLabs_Quickstart_Embeddings.ipynb) |
+| Search | Find specific moments in your videos using text or image queries.| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Search.ipynb) |
+| Classify | Categorize video content based on your criteria. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Classify.ipynb) |
+| Generate | Generate text descriptions for your videos. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Generate.ipynb) |
+| Embed | Create multimodal embeddings. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Embeddings.ipynb) |
 
 <!-- TODO: Extract video data -->
 <!-- TODO: Image queries -->
