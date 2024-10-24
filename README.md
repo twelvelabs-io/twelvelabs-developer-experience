@@ -6,7 +6,7 @@ This repository contains quickstart guides and other resources that show how you
 
 ## Start coding
 
-Get started with these self-contained Jupyter notebooks containing complete, executable code you can customize and extend:
+Get started with these Jupyter notebooks containing complete, executable code you can customize and extend:
 
 | Capability | Description | Try it |
 |------|-------------|---------|
