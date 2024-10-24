@@ -22,11 +22,18 @@ Get started with these self-contained Jupyter notebooks containing complete, exe
 
 Access the platform using any of these methods:
 
-| Method | Resources |
-|--------|---------------|
-| Python SDK| - [Jupyter notebooks](./quickstarts)</br>- [SDK Reference](https://docs.twelvelabs.io/reference/python-sdk)</br>- [Guides](https://docs.twelvelabs.io/) |
-| Node.js SDK| - [SDK Reference](https://docs.twelvelabs.io/reference/node-js-sdk)</br>- [Guides](https://docs.twelvelabs.io/)  |
-| REST API | -[OpenAPI Specification](./api-spec/openapi-1.2.yaml)</br>- [API Reference](https://docs.twelvelabs.io/reference/api-reference) |
+**Python SDK**
+- [Jupyter Notebooks](./quickstarts)
+- [SDK Reference](https://docs.twelvelabs.io/reference/python-sdk)
+- [Guides](https://docs.twelvelabs.io/)
+
+**Node.js SDK**
+- [SDK Reference](https://docs.twelvelabs.io/reference/node-js-sd)
+- [Guides](https://docs.twelvelabs.io/)
+
+**REST API**
+- [OpenAPI Specification](./api-spec/openapi-1.2.yaml)
+- [API Reference](https://docs.twelvelabs.io/reference/api-reference)
 
 
 ## Additional resources 
