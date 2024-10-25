@@ -10,10 +10,10 @@ Get started with these Jupyter notebooks containing complete, executable code yo
 
 | Capability | Description | Try it |
 |------|-------------|---------|
-| Search | Find specific moments in your videos using text or image queries.| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Search.ipynb) |
-| Classify | Categorize video content based on your criteria. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Classify.ipynb) |
-| Generate | Generate summaries and open-ended texts based on your videos. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Generate.ipynb) |
-| Embed | Create multimodal embeddings. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](./quickstarts/TwelveLabs_Quickstart_Embeddings.ipynb) |
+| Search | Find specific moments in your videos using text or image queries.| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Search.ipynb) |
+| Classify | Categorize video content based on your criteria. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Classify.ipynb) |
+| Generate | Generate summaries and open-ended texts based on your videos. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Generate.ipynb) |
+| Embed | Create multimodal embeddings. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Embeddings.ipynb) |
 
 <!-- TODO: Extract video data -->
 <!-- TODO: Image queries -->
