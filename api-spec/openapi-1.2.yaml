@@ -45,6 +45,26 @@ paths:
     summary:  Engines
     get:
       summary: List engines
+      # x-readme:
+      #   code-samples:
+      #     - language: python
+      #       code: |
+      #         from twelvelabs import TwelveLabs
+      #         client = TwelveLabs(api_key="<YOUR_API_KEY>")
+      #         engines = client.engine.list()
+      #         print(engines)
+      #       name: Twelve Labs Python SDK
+      #       install: pip install twelvelabs
+      #     - language: node
+      #       code: |
+      #         import { TwelveLabs } from 'twelvelabs-js';
+      #         (async () => {
+      #           const client = new TwelveLabs({ apiKey: '<YOUR_API_KEY>' });
+      #           const engines = await client.engine.list();
+      #           console.log(engines);
+      #         })();              
+      #       name: Twelve Labs JS SDK
+      #       install: yarn add twelvelabs-js
       description: This method lists all the engines that are available in your account.
       operationId: list-engines
       tags:
@@ -61,6 +81,26 @@ paths:
   '/engines/{engine-id}':
     get:
       summary: Retrieve an engine
+      # x-readme:
+      #   code-samples:
+      #     - language: python
+      #       code: |
+      #         from twelvelabs import TwelveLabs
+      #         client = TwelveLabs(api_key="<YOUR_API_KEY>")
+      #         engine = client.engine.retrieve('pegasus1.1')
+      #         print(engine)
+      #       name: Twelve Labs Python SDK
+      #       install: pip install twelvelabs
+      #     - language: node
+      #       code: |
+      #         import { TwelveLabs } from 'twelvelabs-js';
+      #         (async () => {
+      #           const client = new TwelveLabs({ apiKey: '<YOUR_API_KEY>' });
+      #           const engine = await client.engine.retrieve('pegasus1.1');
+      #           console.log(engine);
+      #         })();              
+      #       name: Twelve Labs JS SDK
+      #       install: yarn add twelvelabs-js
       description: This method retrieves an engine.
       operationId: retrieve-engine
       tags:
@@ -99,6 +139,31 @@ paths:
   /tasks:
     post:
       summary: Create a video indexing task
+      # x-readme:
+      #   code-samples:
+      #     - language: python
+      #       code: |
+      #         from twelvelabs import TwelveLabs
+      #         task = client.task.create(
+      #           index_id='<YOUR_INDEX_ID>',
+      #           file='<YOUR_FILE_PATH>',
+      #         )
+      #         print(f"Task id={task.id}")
+      #       name: Twelve Labs Python SDK
+      #       install: pip install twelvelabs
+      #     - language: node
+      #       code: |
+      #         import { TwelveLabs } from 'twelvelabs-js';
+      #         (async () => {
+      #           const client = new TwelveLabs({ apiKey: '<YOUR_API_KEY>' });
+      #           const task = await client.task.create({
+      #             indexId: '<YOUR_INDEX_ID',
+      #             file: '<YOUR_FILE_NAME' # Example'./assets/1.mp4',
+      #           });
+      #           console.log(`Task id=${task.id}`);
+      #         })();              
+      #       name: Twelve Labs JS SDK
+      #       install: yarn add twelvelabs-js
       description: |
         This method creates a video indexing task that uploads and indexes a video.
         Ensure your video meets the requirements in the [Prerequisites](/docs/upload-single-videos#prerequisites) section of the **Upload single videos** page.
@@ -246,6 +311,28 @@ paths:
           $ref: '#/components/responses/noContentResponse'
         '400':
           $ref: '#/components/responses/genericError'
+
+  ####################################
+  ###   Tasks/External Providers   ###
+  ####################################
+  
+  # '/tasks/external-provider':
+  #   post:
+  #     summary: Upload videos from external providers
+  #     description: |
+  #       Use this endpoint to upload videos from external providers. The platform currently supports only YouTube as an external provider, but we will add support for additional providers in the future.
+  #     operationId: upload-external-provider
+  #     tags:
+  #       - Tasks
+  #     parameters:
+  #       - $ref: '#/components/parameters/x-api-key'
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/upload-external-provider'
+  #     responses:
+  #       '201':
+  #         $ref: '#/components/responses/createVideoIndexingTaskResponse'
+  #       '400':
+  #         $ref: '#/components/responses/genericError'
 
 ###################
 ###   Indexes   ###
@@ -1212,7 +1299,7 @@ paths:
 #############################################
 ###   Text, image, and audio embeddings   ###
 #############################################
-  "/embed-new":
+  "/embed":
     post:
       summary: Create embeddings for text, image, and audio 
       description: |
@@ -1260,26 +1347,26 @@ paths:
 ###   Text embeddings   ###
 ###########################
 
-  '/embed':
-    post:
-      summary: Create text embeddings
-      description: |
-        This endpoint creates text embeddings.
+  # '/embed':
+  #   post:
+  #     summary: Create text embeddings
+  #     description: |
+  #       This endpoint creates text embeddings.
 
-        **NOTE**: The “Marengo-retrieval-2.6” video understanding engine generates embeddings for all modalities in the same latent space. This shared space enables any-to-any searches across different types of content.
-      operationId: create-text-embedding
-      tags:
-        - Create text embeddings
-      requestBody:
-        $ref: '#/components/requestBodies/createTextEmbeddingRequest'
-      parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/multipart'
-      responses:
-        '200':
-          $ref: '#/components/responses/createTextEmbeddingResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+  #       **NOTE**: The “Marengo-retrieval-2.6” video understanding engine generates embeddings for all modalities in the same latent space. This shared space enables any-to-any searches across different types of content.
+  #     operationId: create-text-embedding
+  #     tags:
+  #       - Create text embeddings
+  #     requestBody:
+  #       $ref: '#/components/requestBodies/createTextEmbeddingRequest'
+  #     parameters:
+  #       - $ref: '#/components/parameters/x-api-key'
+  #       - $ref: '#/components/parameters/multipart'
+  #     responses:
+  #       '200':
+  #         $ref: '#/components/responses/createTextEmbeddingResponse'
+  #       '400':
+  #         $ref: '#/components/responses/genericError'
 
 ############################
 ###   Video embeddings   ###
@@ -1570,7 +1657,7 @@ components:
           maxItems: 1024
         start_offset_sec:
           type: number
-          description: The start time of the audio segment for this embedding.
+          description: The start time, in seconds, from which the platform generated the audio embedding.
 
     EmbeddingResult:
       type: object
@@ -2074,6 +2161,51 @@ components:
           format: date-time
           description: |
             The date and time, in the [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format ("YYYY-MM-DDTHH:mm:ssZ"), that the video embedding task was created.
+        # video_embeddings:
+        #   type: array
+        #   description: |
+        #     An array of objects containing your embeddings. This object is returned only if the platform has finished processing your video and the status of the video embedding task is `ready`.
+        #   items:
+        #     type: object
+        #     description: |
+        #       Each object corresponds to an embedding and has the following fields:
+        #     properties:
+        #       start_offset_sec:
+        #         type: number
+        #         format: float
+        #         description: |
+        #           The start time of the video segment for this embedding. If the embedding scope is `video`, this field equals `0`.
+        #       end_offset_sec:
+        #         type: number
+        #         format: float
+        #         description: |
+        #           The end time of the video segment for this embedding. If the embedding scope is `video`, this field equals the duration of the video.
+        #       embedding_scope:
+        #         type: string
+        #         description: |
+        #           Indicates the scope of this embedding. It can take the following values:
+        #           - `video`: This embedding if for the entire video.
+        #           - `clip`: This embedding is for a specific segment.
+        #       embedding:
+        #         description: |
+        #           An object containing the generated embedding vector and associated information.
+        #         type: object
+        #         properties:
+        #           float:
+        #             type: array
+        #             description: |
+        #               An array of 1024 floating point numbers representing the embedding. You can use this array with cosine similarity for various downstream tasks. Note that the example response was truncated for brevity.
+        #             items:
+        #               type: number
+        #               format: float
+        #             minItems: 1024
+        #             maxItems: 1024
+        #           error_message:
+        #             type: string
+        #             description: Error message if the embedding generation failed.
+        #           is_success:
+        #             type: boolean
+        #             description: This field indicates whether the embedding generation was successful.
         metadata:
           type: object
           description: |
@@ -3728,6 +3860,25 @@ components:
                         type: number
                         format: float
                       minItems: 1024
+                    # embedding:
+                    #   description: |
+                    #     An object that contains, among other fields, an array of 1024 floating point numbers representing the embedding. You can use this array with cosine similarity for various downstream tasks. Note that the example response was truncated for brevity.
+                    #   type: object
+                    #   properties:
+                    #     float:
+                    #       type: array
+                    #       items:
+                    #         type: number
+                    #         format: float
+                    #       minItems: 1024
+                    #       maxItems: 1024
+                    #     is_success:
+                    #       type: boolean
+                    #       description: This field indicates whether the embedding generation was successful.
+                    #     error_message:
+                    #       type: string
+                    #       description: |
+                    #         Error message if the embedding generation failed.
               metadata:
                 type: object
                 description: |
@@ -5244,6 +5395,27 @@ components:
                 default: 10
               threshold:
                 $ref: '#/components/schemas/threshold_search'
+    classifyRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - labels
+            - options
+            - video_id
+            properties:
+              conversation_option:
+                $ref: '#/components/schemas/conversation_option'
+              include_clips:
+                $ref: '#/components/schemas/include_clips'
+              labels:
+                $ref: '#/components/schemas/labels'
+              options:
+                $ref: '#/components/schemas/options'
+              threshold:
+                $ref: '#/components/schemas/threshold'
+
 
     update-video-vector:
       content:
@@ -5612,6 +5784,25 @@ components:
 
                 type: string
                 format: binary
+
+    upload-external-provider:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - index_id
+              - url
+            properties:
+              index_id:
+                type: string
+                description: |
+                  The unique identifier of the index to which the video is being uploaded.
+              url:
+                type: string
+                description: |
+                  The URL of the video that you wish to upload.
               
     createVideoIndexingTask:
       required: true
@@ -5757,3 +5948,4 @@ components:
                   engine_options:
                     - visual
                     - conversation
+                    
