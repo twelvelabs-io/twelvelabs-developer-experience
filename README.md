@@ -36,7 +36,8 @@ Access the platform using any of these methods:
 - [API Reference](https://docs.twelvelabs.io/reference/api-reference)
 
 
-## Additional resources 
+## Additional resources
+
 - [Documentation](https://docs.twelvelabs.io/)
 - [Playground](https://playground.twelvelabs.io/)
 - [Partner integrations](https://docs.twelvelabs.io/docs/partner-integrations)
@@ -44,6 +45,7 @@ Access the platform using any of these methods:
 - [Applications built by the community](https://docs.twelvelabs.io/docs/from-the-community)
 
 ## Contributing
+
 Twelve Labs welcomes contributions! To suggest improvements or add new examples:
 1. Review the [existing issues](https://github.com/twelvelabs-io/twelvelabs-developer-experience/issues).
 2. [Open a new issue](https://github.com/twelvelabs-io/twelvelabs-developer-experience/issues/new) to discuss your proposal.
