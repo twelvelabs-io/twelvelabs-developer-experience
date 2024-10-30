@@ -644,6 +644,15 @@ paths:
           required: true
           schema:
             type: string
+        - name: embed 
+          in: query
+          description: |
+            Set this parameter to `true` to retrieve the video embedding in the response. The video must be indexed with the Marengo video understanding engine version 2.6 or later. For details on enabling this engine for an index, see the [Create an index](/reference/create-index) page.
+            **Default**: `false`.
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           $ref: '#/components/responses/getVideoVectorResponse'
@@ -2151,7 +2160,7 @@ components:
         engine_name:
           type: string
           description: |
-            The name of the engine the platform uses to create the embeddings.
+            The name of the video understanding engine the platform used to create the embedding.
         status:
           type: string
           description: |
@@ -3221,6 +3230,44 @@ components:
                   updated_at:
                     type: string
                     description: A string indicating the date and time, in the <a href="https://datatracker.ietf.org/doc/html/rfc3339" target="_blank">RFC 3339</a> format ("YYYY-MM-DDTHH:mm:ssZ"), that the encoding status was last updated.
+              embedding:
+                type: object
+                description: Contains the embedding and the engine name. The platform returns this field when the `embed` query parameter is set to `true` in the request.
+                properties:
+                  engine_name:
+                    type: string
+                    description: The name of the video understanding engine used to create the embedding.
+                  video_embeddings:
+                    type: array
+                    description: |
+                      An array that contains the embedding and additional information.
+                    items:
+                      type: object
+                      properties:
+                        start_offset_sec:
+                          type: number
+                          format: float
+                          description: |
+                            The start time of the video segment for this embedding.
+                        end_offset_sec:
+                          type: number
+                          format: float
+                          description: |
+                            The end time of the video segment for this embedding.
+                        embedding_scope:
+                          type: string
+                          description: |
+                            Indicates the scope of this embedding.
+                        float: 
+                          type: array
+                          description: |
+                            An array of 1024 floating point numbers representing the embeddings for each individual segment. Each segment is between 2 and 10 seconds. You can use this array with cosine similarity for various downstream tasks. Note that the example response was truncated for brevity.
+                          items:
+                            type: number
+                            format: float
+                          minItems: 1024
+                          maxItems: 1024
+
               # source:
               #   type: object
               #   description: |
@@ -3257,6 +3304,13 @@ components:
                   - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000001.jpg
                 status: COMPLETE
                 updated_at: 2024-01-16T07:59:40.879Z
+              embedding:
+                engine_name: Marengo-retrieval-2.6
+                video_embeddings:
+                  - start_offset_sec: 0
+                    end_offset_sec: 7.5666666
+                    embedding_scope: "clip"
+                    float: [-0.04747168, 0.030509098, 0.032282468]
               # source:
               #   type: youtube
               #   name: Here Be Barr
@@ -3822,7 +3876,7 @@ components:
               engine_name:
                 type: string
                 description: |
-                  The name of the engine the platform uses to create the embeddings.
+                  The name of the video understanding engine the platform used to create the embedding.
               status:
                 type: string
                 description: |
@@ -4024,7 +4078,7 @@ components:
               engine_name:
                 type: string
                 description: |
-                  The name of the engine the platform uses to create the embeddings.
+                  The name of the video understanding engine the platform used to create the embedding.
               metadata:
                 type: object
                 description: |
