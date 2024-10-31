@@ -3967,10 +3967,9 @@ components:
               - start_offset_sec: 0
                 end_offset_sec: 6
                 embedding_scope: "clip"
-                embedding:
-                  float:
-                    - -0.060086973
-                    - 0.016479108
+                float:
+                  - -0.060086973
+                  - 0.016479108
             
               - start_offset_sec: 6
                 end_offset_sec: 12
@@ -6002,4 +6001,4 @@ components:
                   engine_options:
                     - visual
                     - conversation
-                    
+ 
