@@ -4,7 +4,7 @@ The Twelve Labs Video Understanding Platform uses state-of-the-art ("SOTA") vide
 
 This repository contains quickstart guides and other resources that show how you can integrate the capabilities of the platform into your applications.
 
-## Start coding
+## Start building 
 
 Get started with these Jupyter notebooks containing complete, executable code you can customize and extend:
 
