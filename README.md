@@ -6,7 +6,7 @@ This repository contains quickstart guides and other resources that show how you
 
 ## Start building 
 
-Get started with these quickstart notebooks containing complete, executable code that you can customize and extend:
+Explore these quickstart notebooks containing complete, executable code that you can customize and extend:
 
 | Capability | Description | Try it |
 |------|-------------|---------|
