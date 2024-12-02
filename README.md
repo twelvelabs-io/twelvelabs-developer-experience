@@ -30,7 +30,7 @@ Access the platform using any of these methods:
 - [Guides](https://docs.twelvelabs.io/)
 
 **REST API**
-- [OpenAPI Specification](./api-spec/openapi-1.2.yaml)
+- [OpenAPI Specification](./api-spec/openapi-1.3.yaml)
 - [API Reference](https://docs.twelvelabs.io/reference/api-reference)
 
 
