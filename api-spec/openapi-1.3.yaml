@@ -2566,10 +2566,6 @@ components:
                 model_options:
                   - visual
                   - audio
-              - model_name: pegasus1.2
-                model_options:
-                  - visual
-                  - audio
     getVideoIndexingTasksResponse:
       description: The video indexing tasks have successfully been retrieved.
       content:
@@ -2713,7 +2709,7 @@ components:
                         - audio
                       addons:
                         - thumbnail
-                    - model_name: pegasus1.2
+                    - model_name: pegasus1.1
                       model_options:
                         - visual
                         - audio
@@ -2730,7 +2726,7 @@ components:
                         - visual
                       addons:
                         - thumbnail
-                    - model_name: pegasus1.2
+                    - model_name: pegasus1.1
                       model_options:
                         - visual
                         - audio
@@ -4167,7 +4163,7 @@ components:
 
                           - **Generative**: These models generate text based on your videos.
 
-                            - `pegasus1.1`, `pegasus1.2`
+                            - `pegasus1.1`
 
                         **NOTE:** You cannot change the models once the index has been created.
 
@@ -4221,7 +4217,7 @@ components:
                 model_options:
                   - visual
                   - audio
-              - model_name: pegasus1.2
+              - model_name: pegasus1.1
                 model_options:
                   - visual
                   - audio
