@@ -611,6 +611,29 @@ paths:
         '429':
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
+  /gist:
+    post:
+      summary: Titles, topics, and hashtags
+      description: |
+        This endpoint generates titles, topics, and hashtags for your videos. Those are representations of the key elements or themes of a video.
+
+        **NOTE**: This endpoint is rate-limited. For details, see the [Rate limits](/docs/rate-limits) page.
+      parameters:
+        - $ref: '#/components/parameters/x-api-key'
+        - $ref: '#/components/parameters/Content-Type'
+      operationId: gist
+      tags:
+        - Generate text from video
+      requestBody:
+        $ref: '#/components/requestBodies/gistRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/gistResponse'
+        '400':
+          $ref: '#/components/responses/genericError'
+        '429':
+          description: |
+            If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
   /generate:
     post:
       summary: Open-ended texts
@@ -650,112 +673,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - type: object
-                    title: Streamed response
-                    description: |
-                      When the value of the `stream` parameter is set to `true`, the platform provides a streaming response in the NDJSON format.
-
-                      The stream contains three types of events:
-                      1. Stream start
-                      2. Text generation
-                      3. Stream end
-
-                      To integrate the response into your application, follow the guidelines below:
-                      - Parse each line of the response as a separate JSON object.
-                      - Check the `event_type` field to determine how to handle the event.
-                      - For `text_generation` events, process the `text` field as it arrives. Depending on your application's requirements, this may involve displaying the text incrementally, storing it for later use, or performing any tasks.
-                      - Use the `stream_start` and `stream_end` events to manage the lifecycle of your streaming session.
-                    oneOf:
-                      - type: object
-                        title: Stream start
-                        description: |
-                          Indicates the beginning of the stream.
-                        properties:
-                          event_type:
-                            type: string
-                            description: |
-                              This field is always set to `stream_start` for this event.
-                            example: stream_start
-                          metadata:
-                            type: object
-                            description: An object containing metadata about the stream.
-                            properties:
-                              generation_id:
-                                type: string
-                                description: |
-                                  A unique identifier for the generation session.
-                                example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                            example:
-                              generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                        example:
-                          event_type: stream_start
-                          metadata:
-                            generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                      - type: object
-                        title: Text generation
-                        description: |
-                          Contains a fragment of generated text. Note that text fragments may be split at arbitrary points, not necessarily at word or sentence boundaries.
-                        properties:
-                          event_type:
-                            type: string
-                            description: |
-                              This field is always set to `text_generation` for this event.
-                            example: text_generation
-                          text:
-                            type: string
-                            description: |
-                              A fragment of the generated text.
-                            example: light-hearted moments of cats
-                        example:
-                          event_type: text_generation
-                          text: light-hearted moments of cats
-                      - type: object
-                        title: Stream end
-                        description: |
-                          Indicates the end of the stream.
-                        properties:
-                          event_type:
-                            type: string
-                            description: |
-                              This field is always set to `stream_end` for this event.
-                            example: stream_end
-                          metadata:
-                            type: object
-                            description: An object containing metadata about the stream.
-                            properties:
-                              generation_id:
-                                type: string
-                                description: |
-                                  The same unique identifier provided in the `stream_start` event.
-                                example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                            example:
-                              generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                        example:
-                          event_type: stream_end
-                          metadata:
-                            generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                    example:
-                      event_type: stream_end
-                      metadata:
-                        generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                  - type: object
-                    description: |
-                      When the value of the `stream` parameter is set to `false`, the response is as follows:
-                    title: Non-streamed response
-                    properties:
-                      id:
-                        description: |
-                          Unique identifier of the response.
-                        type: string
-                        example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                      data:
-                        description: |
-                          The generated text based on the prompt you provided.
-                        type: string
-                        example: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
-                    example:
-                      id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                      data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
+                  - $ref: '#/components/responses/StreamGenerateResponse'
+                  - $ref: '#/components/responses/NonStreamGenerateResponse'
               examples:
                 non-streaming-response:
                   summary: Non-streamed response
@@ -1394,10 +1313,10 @@ components:
         The start time of the matching video clip, expressed in seconds.
       example: 60
     ScoreSearchTerms:
-      type: string
+      type: number
       description: |
         A quantitative value determined by the AI model representing the level of confidence that the results match your search terms.
-      example: '90.5'
+      example: 90.5
     confidence:
       type: string
       description: |
@@ -1407,6 +1326,32 @@ components:
         - `low`
         - `extremely low`
       example: high
+    SearchItem:
+      type: object
+      description: |
+        An object that contains the search results.
+      properties:
+        score:
+          $ref: '#/components/schemas/ScoreSearchTerms'
+        start:
+          $ref: '#/components/schemas/StartTime'
+        end:
+          $ref: '#/components/schemas/EndTime'
+        video_id:
+          type: string
+          description: A string representing the unique identifier of the video. Once the platform indexes a video, it assigns a unique identifier. Note that this is different from the identifier of the video indexing task.
+          example: 639963a1ce36463e0199c8c7
+        confidence:
+          $ref: '#/components/schemas/confidence'
+        thumbnail_url:
+          $ref: '#/components/schemas/thumbnail_url'
+      example:
+        score: 85.08
+        start: 515.4375
+        end: 527
+        video_id: 639963a1ce36463e0199c8c7
+        confidence: high
+        thumbnail_url: https://example.com/thumbnail.jpg
     thumbnail_url:
       type: string
       description: |
@@ -1468,31 +1413,9 @@ components:
           description: |
             An array that contains your search results. For each match found, the model returns the following fields:
           items:
-            type: object
-            properties:
-              score:
-                $ref: '#/components/schemas/ScoreSearchTerms'
-              start:
-                $ref: '#/components/schemas/StartTime'
-              end:
-                $ref: '#/components/schemas/EndTime'
-              video_id:
-                type: string
-                description: A string representing the unique identifier of the video. Once the platform indexes a video, it assigns a unique identifier. Note that this is different from the identifier of the video indexing task.
-                example: 639963a1ce36463e0199c8c7
-              confidence:
-                $ref: '#/components/schemas/confidence'
-              thumbnail_url:
-                $ref: '#/components/schemas/thumbnail_url'
-            example:
-              score: '85.08'
-              start: 515.4375
-              end: 527
-              video_id: 639963a1ce36463e0199c8c7
-              confidence: high
-              thumbnail_url: https://example.com/thumbnail.jpg
+            $ref: '#/components/schemas/SearchItem'
           example:
-            - score: '85.08'
+            - score: 85.08
               start: 515.4375
               end: 527
               video_id: 639963a1ce36463e0199c8c7
@@ -1533,7 +1456,7 @@ components:
           total_duration: 8731
           index_id: 639961c9e219c90227c371a2
         data:
-          - score: '85.08'
+          - score: 85.08
             start: 238.75
             end: 259.62109375
             video_id: 639963a1ce36463e0199c8c7
@@ -2285,7 +2208,7 @@ components:
                 total_duration: 8731
                 index_id: 639961c9e219c90227c371a2
               data:
-                - score: '85.08'
+                - score: 85.08
                   start: 238.75
                   end: 259.62109375
                   video_id: 639963a1ce36463e0199c8c7
@@ -2314,7 +2237,7 @@ components:
               total_duration: 8731
               index_id: 639961c9e219c90227c371a2
             data:
-              - score: '85.08'
+              - score: 85.08
                 start: 238.75
                 end: 259.62109375
                 video_id: 639963a1ce36463e0199c8c7
@@ -3349,6 +3272,80 @@ components:
                 end: 30
                 highlight: A woman vlogs about her summer day, sharing her experience while standing in her childhood home in Minnesota.
                 highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+    gistResponse:
+      description: |
+        The gist of the specified video has successfully been generated.
+      headers:
+        X-Ratelimit-Limit:
+          schema:
+            type: number
+          description: The maximum number of requests you can make per rate limit window for this endpoint. For details, see the [Rate limits](/docs/rate-limits) page.
+          example: 100
+        X-Ratelimit-Remaining:
+          schema:
+            type: number
+          description: The number of requests remaining in the current rate limit window for the specific endpoint. This value decreases with each request you make to that endpoint and resets at the start of the next rate limit window.
+          example: 99
+        X-Ratelimit-Used:
+          schema:
+            type: number
+          description: The number of requests you have made in the current rate limit window for the specific endpoint. This value increases with each request you make to that endpoint and resets to zero at the start of the next rate limit window.
+          example: 1
+        X-Ratelimit-Reset:
+          schema:
+            type: number
+          description: The time at which the current rate limit window resets, expressed in UTC epoch seconds. After this time, the values of the `X-Ratelimit-Remaining` and `X-Ratelimit-Used` parameters will be reset to their initial values for the next rate limit window.
+          example: 1718777276
+      content:
+        application/json:
+          schema:
+            type: object
+            description: |
+              When the value of the `type` parameter is set to `summary`, the response is as follows:
+            title: Summary
+            properties:
+              id:
+                description: |
+                  Unique identifier of the response.
+                type: string
+                example: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
+              title:
+                description: |
+                  Suggested title for the video.
+                type: string
+                example: |
+                  From Consumerism to Minimalism: A Journey Toward Sustainable Living
+              topics:
+                description: |
+                  An array of topics that are relevant to the video.
+                type: array
+                items:
+                  type: string
+                  example: Shopping Vlog Lifestyle
+                example:
+                  - Shopping Vlog Lifestyle
+                  - Minimalism Lifestyle
+                  - Sustainable Living
+              hashtags:
+                description: |
+                  An array of hashtags that are relevant to the video.
+                type: array
+                items:
+                  type: string
+                  example: '#BlackFriday'
+                example:
+                  - '#BlackFriday'
+                  - '#Vlog'
+            example:
+              id: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
+              title: 'From Consumerism to Minimalism: A Journey Toward Sustainable Living'
+              topics:
+                - Shopping Vlog Lifestyle
+                - Minimalism Lifestyle
+                - Sustainable Living
+              hashtags:
+                - '#BlackFriday'
+                - '#Vlog'
     cloud-to-cloud-import-videos-response:
       description: |
         An import has successfully been initiated.
@@ -3501,6 +3498,120 @@ components:
               - filename: VIDEO_4.mp4
                 created_at: '2024-09-24T13:22:00Z'
                 error_message: The file is not a valid video file.
+    StreamGenerateResponse:
+      type: object
+      title: Streamed generate response
+      description: |
+        When the value of the `stream` parameter is set to `true`, the platform provides a streaming response in the NDJSON format.
+
+        The stream contains three types of events:
+        1. Stream start
+        2. Text generation
+        3. Stream end
+
+        To integrate the response into your application, follow the guidelines below:
+        - Parse each line of the response as a separate JSON object.
+        - Check the `event_type` field to determine how to handle the event.
+        - For `text_generation` events, process the `text` field as it arrives. Depending on your application's requirements, this may involve displaying the text incrementally, storing it for later use, or performing any tasks.
+        - Use the `stream_start` and `stream_end` events to manage the lifecycle of your streaming session.
+      oneOf:
+        - $ref: '#/components/responses/StreamStartResponse'
+        - $ref: '#/components/responses/StreamTextResponse'
+        - $ref: '#/components/responses/StreamEndResponse'
+      examples:
+        stream-start-response:
+          summary: Stream start
+          value:
+            event_type: stream_start
+            metadata:
+              generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+        text-generation-response:
+          summary: Text generation
+          value:
+            event_type: text_generation
+            text: light-hearted moments of cats
+        stream-end-response:
+          summary: Stream end
+          value:
+            event_type: stream_end
+            metadata:
+              generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+    StreamStartResponse:
+      type: object
+      title: Stream start
+      description: |
+        Indicates the beginning of the stream.
+      properties:
+        event_type:
+          type: string
+          description: |
+            This field is always set to `stream_start` for this event.
+          example: stream_start
+        metadata:
+          type: object
+          description: An object containing metadata about the stream.
+          properties:
+            generation_id:
+              type: string
+              description: |
+                A unique identifier for the generation session.
+              example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+          example:
+            generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+    StreamTextResponse:
+      type: object
+      title: Text generation
+      description: |
+        Contains a fragment of generated text. Note that text fragments may be split at arbitrary points, not necessarily at word or sentence boundaries.
+      properties:
+        event_type:
+          type: string
+          description: |
+            This field is always set to `text_generation` for this event.
+          example: text_generation
+        text:
+          type: string
+          description: |
+            A fragment of the generated text.
+          example: light-hearted moments of cats
+    StreamEndResponse:
+      type: object
+      title: Stream end
+      description: |
+        Indicates the end of the stream.
+      properties:
+        event_type:
+          type: string
+          description: |
+            This field is always set to `stream_end` for this event.
+          example: stream_end
+        metadata:
+          type: object
+          description: An object containing metadata about the stream.
+          properties:
+            generation_id:
+              type: string
+              description: |
+                The same unique identifier provided in the `stream_start` event.
+              example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+          example:
+            generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+    NonStreamGenerateResponse:
+      type: object
+      title: Non-streamed response
+      description: |
+        When the value of the `stream` parameter is set to `false`, the response is as follows:
+      properties:
+        id:
+          description: |
+            Unique identifier of the response.
+          type: string
+          example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+        data:
+          description: |
+            The generated text based on the prompt you provided.
+          type: string
+          example: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
   requestBodies:
     createSyncEmbeddingRequest:
       description: |
@@ -3799,6 +3910,44 @@ components:
               type: summary
               prompt: Generate a summary of this video for a social media post, up to two sentences.
               temperature: 0.7
+    gistRequest:
+      description: |
+        Request to generate a gist for a video.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - video_id
+              - types
+            properties:
+              video_id:
+                type: string
+                description: |
+                  The unique identifier of the video that you want to generate a gist for.
+                example: 6298d673f1090f1100476d4c
+              types:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - title
+                    - topics
+                    - hashtags
+                  example: title
+                description: |
+                  Specifies the type of gist. Use one of the following values:
+                    - `title`: A title succinctly captures a video's main theme, such as "From Consumerism to Minimalism: A Journey Toward Sustainable Living," guiding viewers to its content and themes.
+                    - `topics`: A topic is the central theme of a video, such as "Shopping Vlog Lifestyle", summarizing its content for efficient categorization and reference.
+                    - `hashtags`: A hashtag, like "#BlackFriday", represents key themes in a video, enhancing its discoverability and categorization on social media platforms.
+                example:
+                  - title
+                  - topics
+            example:
+              video_id: 6298d673f1090f1100476d4c
+              types:
+                - title
+                - topics
     update-video-vector:
       description: |
         Request to update the metadata of a video.
