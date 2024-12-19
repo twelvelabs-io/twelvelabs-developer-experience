@@ -134,6 +134,7 @@ paths:
         - Before importing videos, you must set up an integration. For details, see the [Set up an integration](/docs/upload-cloud#set-up-an-integration) section.
         - The videos you wish to upload must meet the requirements in the [Prerequisites](/docs/upload-single-videos#prerequisites) section of the **Upload single videos** page.
         - By default, the platform checks for duplicate files using hashes within the target index and will not upload the same video to the same index twice. However, the same video can exist in multiple indexes. To bypass duplicate checking entirely and import duplicate videos into the same index, set the value of the `incremental_import` parameter to `false`.
+        - Only one import job can run at a time. To start a new import, wait for the current job to complete. Use the [`GET`](/reference/cloud-to-cloud-retrieve-import-logs) method of the `/tasks/transfers/import/{integration-id}/logs` endpoint to retrieve a list of your import jobs, including their creation time, completion time, and processing status for each video file.
       parameters:
         - $ref: '#/components/parameters/x-api-key'
         - $ref: '#/components/parameters/Content-Type'
