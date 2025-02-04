@@ -682,6 +682,8 @@ paths:
                   value:
                     id: 2a22fd17-7bd4-446a-abd6-b9382cb18f90
                     data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
+                    usage:
+                      output_tokens: 100
                 stream-start-response:
                   summary: Stream start
                   value:
@@ -699,6 +701,8 @@ paths:
                     event_type: stream_end
                     metadata:
                       generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+                      usage:
+                        output_tokens: 100
         '400':
           $ref: '#/components/responses/genericError'
         '429':
@@ -1938,12 +1942,12 @@ components:
               description: |
                 The same unique identifier provided in the `stream_start` event.
               example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+            usage:
+              $ref: '#/components/schemas/TokenUsage'
           example:
             generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-      example:
-        event_type: stream_end
-        metadata:
-          generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+            usage:
+              output_tokens: 100
     NonStreamGenerateResponse:
       type: object
       title: Non-streamed response
@@ -1960,9 +1964,25 @@ components:
           description: |
             The generated text based on the prompt you provided.
           example: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
+        usage:
+          $ref: '#/components/schemas/TokenUsage'
       example:
         id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
         data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
+        usage:
+          output_tokens: 100
+    TokenUsage:
+      type: object
+      title: Token usage for generation
+      description: |
+        The number of tokens used in the generation.
+      properties:
+        output_tokens:
+          type: integer
+          description: |
+            The number of tokens in the generated text.
+      example:
+        output_tokens: 100
   parameters:
     video-embedding-task-id:
       name: task_id
@@ -3245,9 +3265,13 @@ components:
                     type: string
                     example: |
                       Black Friday shoppers are shown in a mall, pushing and shoving through the crowds. A news reporter talks about shopping mania and its impact on stores. He mentions that stores are filled to the brim and that the hunt for deals can make people miserable. A woman talks to the camera about how people have lost their minds and how the American dream has become associated with material possessions.
+                  usage:
+                    $ref: '#/components/schemas/TokenUsage'
                 example:
                   id: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
                   summary: Black Friday shoppers are shown in a mall, pushing and shoving through the crowds. A news reporter talks about shopping mania and its impact on stores. He mentions that stores are filled to the brim and that the hunt for deals can make people miserable. A woman talks to the camera about how people have lost their minds and how the American dream has become associated with material possessions.
+                  usage:
+                    output_tokens: 100
               - type: object
                 description: |
                   When the value of the `type` parameter is set to `chapter`, the response is as follows:
@@ -3314,6 +3338,8 @@ components:
                         end: 60
                         chapter_title: Shopping Hauls
                         chapter_summary: The woman talks about her recent shopping spree and purchases.
+                  usage:
+                    $ref: '#/components/schemas/TokenUsage'
                 example:
                   id: 663da73b31cdd0c1f638a8e6
                   chapters:
@@ -3322,6 +3348,8 @@ components:
                       end: 30
                       chapter_title: Graduation and Moving Home
                       chapter_summary: The woman talks about her recent graduation and moving back home.
+                  usage:
+                    output_tokens: 100
               - type: object
                 description: |
                   When the value of the `type` parameter is set to `highlight`, the response is as follows:
@@ -3375,6 +3403,8 @@ components:
                         end: 60
                         highlight: A woman is making a video of her food preparation and tasting.
                         highlight_summary: A woman demonstrates how to make a delicious bread salad with tomatoes and cheese while explaining the process.
+                  usage:
+                    $ref: '#/components/schemas/TokenUsage'
                 example:
                   id: 663da73b31cdd0c1f638a8e6
                   highlights:
@@ -3382,6 +3412,8 @@ components:
                       end: 30
                       highlight: A woman vlogs about her summer day, sharing her experience while standing in her childhood home in Minnesota.
                       highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+                  usage:
+                    output_tokens: 100
           example:
             id: 663da73b31cdd0c1f638a8e6
             highlights:
@@ -3389,6 +3421,8 @@ components:
                 end: 30
                 highlight: A woman vlogs about her summer day, sharing her experience while standing in her childhood home in Minnesota.
                 highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+            usage:
+              output_tokens: 100
     gistResponse:
       description: |
         The gist of the specified video has successfully been generated.
@@ -3453,6 +3487,8 @@ components:
                 example:
                   - '#BlackFriday'
                   - '#Vlog'
+              usage:
+                $ref: '#/components/schemas/TokenUsage'
             example:
               id: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
               title: 'From Consumerism to Minimalism: A Journey Toward Sustainable Living'
@@ -3463,6 +3499,8 @@ components:
               hashtags:
                 - '#BlackFriday'
                 - '#Vlog'
+              usage:
+                output_tokens: 100
     cloud-to-cloud-import-videos-response:
       description: |
         An import has successfully been initiated.
