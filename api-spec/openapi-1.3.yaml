@@ -3870,7 +3870,7 @@ components:
                   **NOTES**:
                     - Even though the model behind this endpoint is trained to a high degree of accuracy, the preciseness of the generated text may vary based on the nature and quality of the video and the clarity of the prompt.
                     - Your prompts can be instructive or descriptive, or you can also phrase them as questions.
-                    - The maximum length of a prompt is 1500 characters.
+                    - The maximum length of a prompt is 350 tokens.
 
                   **Examples**:
 
@@ -3929,7 +3929,7 @@ components:
 
                   **NOTES**:
                     - Your prompts can be instructive or descriptive, or you can also phrase them as questions.
-                    - The maximum length of a prompt is 1500 characters.
+                    - The maximum length of a prompt is 350 tokens.
 
                   **Example**: Generate a summary of this video for a social media post, up to two sentences.
                 example: Generate a summary of this video for a social media post, up to two sentences.
