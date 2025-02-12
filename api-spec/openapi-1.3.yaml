@@ -2618,10 +2618,6 @@ components:
                   - audio
                 addons:
                   - thumbnail
-              - model_name: pegasus1.1
-                model_options:
-                  - visual
-                  - audio
               - model_name: pegasus1.2
                 model_options:
                   - visual
@@ -4353,7 +4349,7 @@ components:
 
                           - **Generative**: These models generate text based on your videos.
 
-                            - `pegasus1.1`, `pegasus1.2`
+                            -`pegasus1.2`
 
                         **NOTE:** You cannot change the models once the index has been created.
 
