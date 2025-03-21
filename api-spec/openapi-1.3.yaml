@@ -4335,7 +4335,7 @@ components:
 
                           - **Generative**: These models generate text based on your videos.
 
-                            -`pegasus1.2`
+                            - `pegasus1.2`
 
                         **NOTE:** You cannot change the models once the index has been created.
 
