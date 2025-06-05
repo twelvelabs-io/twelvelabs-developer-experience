@@ -11,7 +11,7 @@ Explore these quickstart notebooks containing complete, executable code that you
 | Capability | Description | Try it |
 |------|-------------|---------|
 | Search | Find specific moments in your videos using text or image queries.| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Search.ipynb) |
-| Generate | Generate summaries and open-ended texts based on your videos. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Generate.ipynb) |
+| Analyze | Analyze videos and generate text based on their content. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Analyze.ipynb) |
 | Embed | Create multimodal embeddings. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Embeddings.ipynb) |
 
 <!-- TODO: Image queries -->
