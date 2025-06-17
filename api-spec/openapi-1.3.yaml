@@ -15,7 +15,7 @@ tags:
   - name: Manage videos
   - name: Any-to-video search
   - name: Create video embeddings
-  - name: Generate text from video
+  - name: Analyze videos
   - name: Create text, image, and audio embeddings
 paths:
   /tasks:
@@ -137,7 +137,7 @@ paths:
       summary: Import videos
       description: |
         An import represents the process of uploading and indexing all videos from the specified integration.
-    
+
         This method initiates an asynchronous import and returns two lists:
         - Videos that will be imported.
         - Videos that will not be imported, typically because they do not meet the prerequisites of all enabled video understanding models for your index. Note that the most restrictive prerequisites among the enabled models will apply.
@@ -184,7 +184,7 @@ paths:
   /tasks/transfers/import/{integration-id}/status:
     get:
       summary: Retrieve import status
-      description: This method retrieves the current status for each video from a specified integration and index. It returns an object containing lists of videos grouped by status. See the [Upload single videosTask object](/v1.3/api-reference/tasks/the-task-object) page for details on each status.
+      description: This method retrieves the current status for each video from a specified integration and index. It returns an object containing lists of videos grouped by status. See the [Task object](/v1.3/api-reference/tasks/the-task-object) page for details on each status.
       parameters:
         - $ref: '#/components/parameters/x-api-key'
         - $ref: '#/components/parameters/Content-Type'
@@ -612,7 +612,7 @@ paths:
     post:
       summary: Summaries, chapters, or highlights
       description: |
-        This endpoint generates summaries, chapters, or highlights for your videos. Optionally, you can provide a prompt to customize the output.
+        This endpoint analyzes videos and generates summaries, chapters, or highlights. Optionally, you can provide a prompt to customize the output.
 
         <Note title="Note">
         This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
@@ -622,7 +622,7 @@ paths:
         - $ref: '#/components/parameters/Content-Type'
       operationId: summarize
       tags:
-        - Generate text from video
+        - Analyze videos
       requestBody:
         $ref: '#/components/requestBodies/summarizeRequest'
       responses:
@@ -637,7 +637,7 @@ paths:
     post:
       summary: Titles, topics, and hashtags
       description: |
-        This endpoint generates titles, topics, and hashtags for your videos.
+        This endpoint analyzes videos and generates titles, topics, and hashtags.
 
         <Note title="Note">
         This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
@@ -647,7 +647,7 @@ paths:
         - $ref: '#/components/parameters/Content-Type'
       operationId: gist
       tags:
-        - Generate text from video
+        - Analyze videos
       requestBody:
         $ref: '#/components/requestBodies/gistRequest'
       responses:
@@ -660,20 +660,95 @@ paths:
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
   /generate:
     post:
+      deprecated: true
       summary: Open-ended texts
       description: |
+        <Warning>This endpoint will be deprecated on **July 30, 2025**. Transition to the [`/analyze`](/v1.3/api-reference/analyze-videos/analyze) endpoint, which provides identical functionality. Ensure you've updated your API calls before the deprecation date to ensure uninterrupted service.</Warning>
+
         This endpoint generates open-ended texts based on your videos, including but not limited to tables of content, action items, memos, and detailed analyses.
 
         <Note title="Notes">
         - This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
-        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Generate open-ended text](/v1.3/docs/guides/generate-text-from-video/open-ended-text) page.
+        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Streaming response](/v1.3/docs/guides/generate-text-from-video/open-ended-text#streaming-responses) guide.
+        </Note>
+      parameters:
+        - $ref: '#/components/parameters/x-api-key'
+        - $ref: '#/components/parameters/Content-Type'
+      operationId: analyze
+      tags:
+        - Analyze videos
+      requestBody:
+        $ref: '#/components/requestBodies/generateTextRepresentationRequest'
+      responses:
+        '200':
+          description: The specified video has successfully been processed.
+          headers:
+            X-Ratelimit-Limit:
+              $ref: '#/components/headers/X-Ratelimit-Limit'
+            X-Ratelimit-Remaining:
+              $ref: '#/components/headers/X-Ratelimit-Remaining'
+            X-Ratelimit-Used:
+              $ref: '#/components/headers/X-Ratelimit-Used'
+            X-Ratelimit-Reset:
+              $ref: '#/components/headers/X-Ratelimit-Reset'
+            Transfer-Encoding:
+              schema:
+                type: string
+                description: The platform returns this header when the `stream` parameter is set to `true` in the request. It indicates that the response body is sent in chunks.
+                default: chunked
+                example: chunked
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/StreamGenerateResponse'
+                  - $ref: '#/components/schemas/NonStreamGenerateResponse'
+              examples:
+                non-streaming-response:
+                  summary: Non-streamed response
+                  value:
+                    id: 2a22fd17-7bd4-446a-abd6-b9382cb18f90
+                    data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
+                stream-start-response:
+                  summary: Stream start
+                  value:
+                    event_type: stream_start
+                    metadata:
+                      generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+                text-generation-resonse:
+                  summary: Text generation
+                  value:
+                    event_type: text_generation
+                    text: light-hearted moments of cats
+                stream-end-response:
+                  summary: Stream end
+                  value:
+                    event_type: stream_end
+                    metadata:
+                      generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+                      usage:
+                        output_tokens: 100
+        '400':
+          $ref: '#/components/responses/genericError'
+        '429':
+          description: |
+            If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
+  /analyze:
+    post:
+      summary: Open-ended analysis
+      description: |
+        This endpoint analyzes your videos and creates fully customizable text based on your prompts, including but not limited to tables of content, action items, memos, and detailed analyses.
+
+        <Note title="Notes">
+        - This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
+        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Streaming response](/v1.3/docs/guides/generate-text-from-video/open-ended-text#streaming-responses) guide.
         </Note>
       parameters:
         - $ref: '#/components/parameters/x-api-key'
         - $ref: '#/components/parameters/Content-Type'
       operationId: generate-text-representation
       tags:
-        - Generate text from video
+        - Analyze videos
       requestBody:
         $ref: '#/components/requestBodies/generateTextRepresentationRequest'
       responses:
@@ -737,8 +812,8 @@ paths:
         This method creates embeddings for text, image, and audio content.
 
         Before you create an embedding, ensure that your image or audio files meet the following prerequisites:
-        - [Image embeddings](/v1.3/docs/guides/create-embeddings/image)
-        - [Audio embeddings](/v1.3/docs/guides/create-embeddings/audio)
+        - [Image embeddings](/v1.3/docs/guides/create-embeddings/image#prerequisites)
+        - [Audio embeddings](/v1.3/docs/guides/create-embeddings/audio#prerequisites)
 
         Parameters for embeddings:
         - **Common parameters**:
@@ -898,7 +973,6 @@ paths:
           - **Size**: Must not exceed 5MB.
           - **Object visibility**: Ensure that the objects of interest are visible and occupy at least 50% of the video frame. This helps the platform accurately identify and match the objects.
         </Accordion>
-
 
         <Note title="Note">
         This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
@@ -1124,15 +1198,25 @@ components:
       type: object
       description: |
         An object that contains the generated embedding vector and associated information.
+      required:
+        - model_name
       properties:
         model_name:
           type: string
-          description: The name ofhe video understanding model the platform has used to create this embedding.
+          description: The name of the video understanding model the platform has used to create this embedding.
           example: Marengo-retrieval-2.7
-      anyOf:
-        - $ref: '#/components/schemas/AudioEmbeddingResponse'
-        - $ref: '#/components/schemas/ImageEmbeddingResponse'
-        - $ref: '#/components/schemas/TextEmbeddingResponse'
+        text_embedding:
+          allOf:
+            - $ref: '#/components/schemas/TextEmbeddingResult'
+          description: An object that contains the generated text embedding vector and associated information. Present when a text was processed.
+        image_embedding:
+          allOf:
+            - $ref: '#/components/schemas/ImageEmbeddingResult'
+          description: An object that contains the generated image embedding vector and associated information. Present when an image was processed.
+        audio_embedding:
+          allOf:
+            - $ref: '#/components/schemas/AudioEmbeddingResult'
+          description: An object that contains the generated audio embedding vector and associated information. Present when an audio file was processed.
       example:
         model_name: Marengo-retrieval-2.7
         audio_embedding:
@@ -1152,60 +1236,6 @@ components:
                 - 0.029209055
           metadata:
             input_filename: 01.jpg
-        text_embedding:
-          segments:
-            - float:
-                - -0.042632885
-                - 0.014312328
-                - 0.029209055
-    AudioEmbeddingResponse:
-      description: |
-        An object that contains the generated audio embedding vector and associated information.
-      type: object
-      title: Audio embedding
-      required:
-        - audio_embedding
-      properties:
-        audio_embedding:
-          $ref: '#/components/schemas/AudioEmbeddingResult'
-      example:
-        audio_embedding:
-          segments:
-            - start_offset_sec: 0
-              float:
-                - -0.042632885
-                - 0.014312328
-                - 0.029209055
-          metadata:
-            input_filename: 01.mp3
-    ImageEmbeddingResponse:
-      description: |
-        An object that contains the generated image embedding vector and associated information.
-      type: object
-      title: Image embedding
-      required:
-        - image_embedding
-      properties:
-        image_embedding:
-          $ref: '#/components/schemas/ImageEmbeddingResult'
-      example:
-        image_embedding:
-          segments:
-            - float:
-                - -0.042632885
-                - 0.014312328
-                - 0.029209055
-    TextEmbeddingResponse:
-      description: |
-        An object that contains the generated text embedding vector and associated information.
-      type: object
-      title: Text embedding
-      required:
-        - text_embedding
-      properties:
-        text_embedding:
-          $ref: '#/components/schemas/TextEmbeddingResult'
-      example:
         text_embedding:
           segments:
             - float:
@@ -1454,6 +1484,8 @@ components:
                 type: string
                 description: A string representing the unique identifier of the video for the corresponding clip.
                 example: 639963a1ce36463e0199c8c7
+              user_metadata:
+                $ref: '#/components/schemas/UserMetadata'
       example:
         score: 85.08
         start: 515.4375
@@ -1485,7 +1517,7 @@ components:
       example: 10
     page_info:
       type: object
-      description: Simple page information object that provides information about pagination.
+      description: An object that provides information about pagination.
       properties:
         limit_per_page:
           $ref: '#/components/schemas/limit_per_page_simple'
@@ -1947,8 +1979,19 @@ components:
             - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000003.jpg
         status:
           type: string
-          description: A string representing the encoding status of the video file from its original format to a streamable format.
-          example: ready
+          enum:
+            - PROCESSING
+            - COMPLETE
+            - CANCELED
+            - ERROR
+          description: |
+            A string representing the encoding status of the video file from its original format to a streamable format.
+            Possible values:
+            - `PROCESSING`: Video is currently being encoded and is not yet ready for streaming
+            - `COMPLETE`: Encoding has successfully finished and the video is ready for streaming
+            - `CANCELED`: Encoding was manually canceled before completion
+            - `ERROR`: An error occurred during the encoding process
+          example: COMPLETE
         updated_at:
           type: string
           description: A string indicating the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the encoding status was last updated.
@@ -1959,11 +2002,11 @@ components:
           - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000001.jpg
           - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000002.jpg
           - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000003.jpg
-        status: ready
+        status: COMPLETE
         updated_at: '2024-01-09T11:17:15.296Z'
     StreamGenerateResponse:
       type: object
-      title: Streamed generate response
+      title: Streamed response
       description: |
         When the value of the `stream` parameter is set to `true`, the platform provides a streaming response in the NDJSON format.
 
@@ -2091,6 +2134,39 @@ components:
             The number of tokens in the generated text.
       example:
         output_tokens: 100
+    UserMetadata:
+      type: object
+      description: |
+        Metadata that helps you categorize your videos. You can specify a list of keys and values. Keys must be of type `string`, and values can be of the following types: `string`, `integer`, `float` or `boolean`.
+
+        **Example**:
+        ```JSON
+        "user_metadata": {
+          "category": "recentlyAdded",
+          "batchNumber": 5,
+          "rating": 9.3,
+          "needsReview": true
+        }
+        ```
+
+        <Note title="Notes">
+        -  If you want to store other types of data such as objects or arrays,  you must convert your data into string values.
+        - You cannot override the following system-generated metadata fields:
+          - `duration`
+          - `filename`
+          - `fps`
+          - `height`
+          - `model_names`
+          - `size`
+          - `video_title`
+          - `width`
+        </Note>
+      additionalProperties: {}
+      example:
+        category: recentlyAdded
+        batchNumber: 5
+        rating: 9.3
+        needsReview: true
   parameters:
     video-embedding-task-id:
       name: task_id
@@ -2104,7 +2180,16 @@ components:
     embedding_option_optional:
       name: embedding_option
       in: query
-      description: "Specifies which types of embeddings to retrieve. You can include one or more of the following values:\n- `visual-text`:  Returns visual embeddings optimized for text search.\n- `audio`: Returns audio embeddings.\n<br/>\nTo retrieve embeddings for a video, it must be indexed using the Marengo video understanding model version 2.7 or later. For details on enabling this model for an index, see the [Create an index](/reference/create-index) page.\n\nThe platform does not return embeddings if you don't provide this parameter.\n\nThe values you specify in\_`embedding_option`\_must be included in the\_`model_options`\_defined when the index was created. For example, if `model_options` is set to `visual,` you cannot set `embedding_option` to `audio` or  both `visual-text` and `audio`.\n"
+      description: |
+        Specifies which types of embeddings to retrieve. You can include one or more of the following values:
+        - `visual-text`:  Returns visual embeddings optimized for text search.
+        - `audio`: Returns audio embeddings.
+        <br/>
+        To retrieve embeddings for a video, it must be indexed using the Marengo video understanding model version 2.7 or later. For details on enabling this model for an index, see the [Create an index](/reference/create-index) page.
+
+        The platform does not return embeddings if you don't provide this parameter.
+
+        The values you specify in `embedding_option` must be included in the `model_options` defined when the index was created. For example, if `model_options` is set to `visual,` you cannot set `embedding_option` to `audio` or  both `visual-text` and `audio`.
       required: false
       schema:
         type: array
@@ -2513,6 +2598,18 @@ components:
                 confidence: high
                 thumbnail_url: https://example.com/thumbnail.jpg
                 transcription: A woman vlogs about her summer day, sharing her experience
+    retrieveThumbnailResponse:
+      description: A thumbnail has successfully been retrieved.
+      content:
+        application/json:
+          schema:
+            properties:
+              thumbnail:
+                type: string
+                description: A string representing the URL of the thumbnail. Note that the URL expires in one hour.
+                example: https://project-one-thumbnail.s3.us-west-2.amazonaws.com/6320748774fed2f3511f2a92/10.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYRWJPOVHXE5SJ77T%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T075213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=46b3bac13fb8b022313244780c238cb6bfc53eddcbee3be23a8d2dd22d99543e
+          example:
+            thumbnail: https://project-one-thumbnail.s3.us-west-2.amazonaws.com/6320748774fed2f3511f2a92/10.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYRWJPOVHXE5SJ77T%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T075213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=46b3bac13fb8b022313244780c238cb6bfc53eddcbee3be23a8d2dd22d99543e
     getVideoVectorsResponse:
       description: The video vectors in the specified index have successfully been retrieved.
       content:
@@ -4142,38 +4239,7 @@ components:
             type: object
             properties:
               user_metadata:
-                type: object
-                description: |
-                  Metadata that helps you categorize your videos. You can specify a list of keys and values. Keys must be of type `string`, and values can be of the following types: `string`, `integer`, `float` or `boolean`.
-
-                  **Example**:
-                  ```JSON
-                  "user_metadata": {
-                    "category": "recentlyAdded",
-                    "batchNumber": 5,
-                    "rating": 9.3,
-                    "needsReview": true
-                  }
-                  ```
-
-                  <Note title="Notes">
-                  -  If you want to store other types of data such as objects or arrays,  you must convert your data into string values.
-                  - You cannot override the following system-generated metadata fields:
-                    - `duration`
-                    - `filename`
-                    - `fps`
-                    - `height`
-                    -  `model_names`
-                    - `size`
-                    - `video_title`
-                    - `width`
-                  </Note>
-                additionalProperties: {}
-                example:
-                  category: recentlyAdded
-                  batchNumber: 5
-                  rating: 9.3
-                  needsReview: true
+                $ref: '#/components/schemas/UserMetadata'
             example:
               user_metadata:
                 category: recentlyAdded
