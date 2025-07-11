@@ -9,6 +9,11 @@ info:
   version: 1.3.0
 servers:
   - url: https://api.twelvelabs.io/v1.3
+
+################
+###   Tags   ###
+################
+
 tags:
   - name: Manage indexes
   - name: Upload videos
@@ -17,7 +22,12 @@ tags:
   - name: Create video embeddings
   - name: Analyze videos
   - name: Create text, image, and audio embeddings
+
 paths:
+  #################
+  ###   Tasks   ###
+  #################
+
   /tasks:
     post:
       summary: Create a video indexing task
@@ -31,7 +41,7 @@ paths:
         <Accordion title="Video requirements">
           The videos you wish to upload must meet the following requirements:
           - **Video resolution**: Must be at least 360x360 and must not exceed 3840x2160.
-          - **Aspect ratio**: Must be one of 1:1, 4:3, 4:5, 5:4, 16:9, or 9:16.
+          - **Aspect ratio**: Must be one of 1:1, 4:3, 4:5, 5:4, 16:9, 9:16, or 17:9.
           - **Video and audio formats**: Your video files must be encoded in the video and audio formats listed on the [FFmpeg Formats Documentation](https://ffmpeg.org/ffmpeg-formats.html) page. For videos in other formats, contact us at support@twelvelabs.io.
           - **Duration**: For Marengo, it must be between 4 seconds and 2 hours (7,200s). For Pegasus, it must be between 4 seconds and 60 minutes (3600s). In a future release, the maximum duration for Pegasus will be 2 hours (7,200 seconds).
           - **File size**: Must not exceed 2 GB.
@@ -48,15 +58,15 @@ paths:
       tags:
         - Upload videos
       requestBody:
-        $ref: '#/components/requestBodies/createVideoIndexingTask'
+        $ref: "#/components/requestBodies/createVideoIndexingTask"
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/multipart'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/multipart"
       responses:
-        '200':
-          $ref: '#/components/responses/createVideoIndexingTaskResponse'
-        '400':
-          $ref: '#/components/responses/insufficientFunds'
+        "200":
+          $ref: "#/components/responses/createVideoIndexingTaskResponse"
+        "400":
+          $ref: "#/components/responses/insufficientFunds"
     get:
       summary: List video indexing tasks
       description: This method returns a list of the video indexing tasks in your account. The API returns your video indexing tasks sorted by creation date, with the newest at the top of the list.
@@ -64,25 +74,25 @@ paths:
       tags:
         - Upload videos
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/page_limit'
-        - $ref: '#/components/parameters/sort_by'
-        - $ref: '#/components/parameters/sort_option'
-        - $ref: '#/components/parameters/index_id'
-        - $ref: '#/components/parameters/task_status'
-        - $ref: '#/components/parameters/filename'
-        - $ref: '#/components/parameters/duration'
-        - $ref: '#/components/parameters/width'
-        - $ref: '#/components/parameters/height'
-        - $ref: '#/components/parameters/created_at'
-        - $ref: '#/components/parameters/updated_at'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/page_limit"
+        - $ref: "#/components/parameters/sort_by"
+        - $ref: "#/components/parameters/sort_option"
+        - $ref: "#/components/parameters/index_id"
+        - $ref: "#/components/parameters/task_status"
+        - $ref: "#/components/parameters/filename"
+        - $ref: "#/components/parameters/duration"
+        - $ref: "#/components/parameters/width"
+        - $ref: "#/components/parameters/height"
+        - $ref: "#/components/parameters/created_at"
+        - $ref: "#/components/parameters/updated_at"
       responses:
-        '200':
-          $ref: '#/components/responses/getVideoIndexingTasksResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/getVideoIndexingTasksResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
   /tasks/{task_id}:
     get:
       summary: Retrieve a video indexing task
@@ -91,8 +101,8 @@ paths:
       tags:
         - Upload videos
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: task_id
           in: path
           description: |
@@ -102,10 +112,10 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       responses:
-        '200':
-          $ref: '#/components/responses/getVideoIndexingTaskResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/getVideoIndexingTaskResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
     delete:
       summary: Delete a video indexing task
       description: |
@@ -117,8 +127,8 @@ paths:
       tags:
         - Upload videos
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: task_id
           in: path
           description: |
@@ -128,16 +138,16 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       responses:
-        '204':
-          $ref: '#/components/responses/noContentResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "204":
+          $ref: "#/components/responses/noContentResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
   /tasks/transfers/import/{integration-id}:
     post:
       summary: Import videos
       description: |
         An import represents the process of uploading and indexing all videos from the specified integration.
-
+    
         This method initiates an asynchronous import and returns two lists:
         - Videos that will be imported.
         - Videos that will not be imported, typically because they do not meet the prerequisites of all enabled video understanding models for your index. Note that the most restrictive prerequisites among the enabled models will apply.
@@ -147,7 +157,7 @@ paths:
         <Accordion title="Video requirements">
           The videos you wish to upload must meet the following requirements:
           - **Video resolution**: Must be at least 360x360 and must not exceed 3840x2160.
-          - **Aspect ratio**: Must be one of 1:1, 4:3, 4:5, 5:4, 16:9, or 9:16.
+          - **Aspect ratio**: Must be one of 1:1, 4:3, 4:5, 5:4, 16:9, 9:16, or 17:9.
           - **Video and audio formats**: Your video files must be encoded in the video and audio formats listed on the [FFmpeg Formats Documentation](https://ffmpeg.org/ffmpeg-formats.html) page. For videos in other formats, contact us at support@twelvelabs.io.
           - **Duration**: For Marengo, it must be between 4 seconds and 2 hours (7,200s). For Pegasus, it must be between 4 seconds and 60 minutes (3600s). In a future release, the maximum duration for Pegasus will be 2 hours (7,200 seconds).
           - **File size**: Must not exceed 2 GB.
@@ -162,8 +172,8 @@ paths:
         - Only one import job can run at a time. To start a new import, wait for the current job to complete. Use the [`GET`](/v1.3/api-reference/tasks/cloud-to-cloud-integrations/get-status) method of the `/tasks/transfers/import/{integration-id}/logs` endpoint to retrieve a list of your import jobs, including their creation time, completion time, and processing status for each video file.
         </Note>
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: integration-id
           description: The unique identifier of the integration for which you want to import videos. You can retrieve it from the [Integrations](https://playground.twelvelabs.io/dashboard/integrations) page.
           in: path
@@ -173,21 +183,21 @@ paths:
           example: 6298d673f1090f1100476d4c
       operationId: cloud-to-cloud-import-videos
       requestBody:
-        $ref: '#/components/requestBodies/cloud-to-cloud-import-videos-request'
+        $ref: "#/components/requestBodies/cloud-to-cloud-import-videos-request"
       tags:
         - Upload videos
       responses:
-        '201':
-          $ref: '#/components/responses/cloud-to-cloud-import-videos-response'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "201":
+          $ref: "#/components/responses/cloud-to-cloud-import-videos-response"
+        "400":
+          $ref: "#/components/responses/genericError"
   /tasks/transfers/import/{integration-id}/status:
     get:
       summary: Retrieve import status
       description: This method retrieves the current status for each video from a specified integration and index. It returns an object containing lists of videos grouped by status. See the [Task object](/v1.3/api-reference/tasks/the-task-object) page for details on each status.
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: integration-id
           description: The unique identifier of the integration for which you want to retrieve the status of your imported videos. You can retrieve it from the [Integrations](https://playground.twelvelabs.io/dashboard/integrations) page.
           in: path
@@ -207,10 +217,10 @@ paths:
       tags:
         - Upload videos
       responses:
-        '200':
-          $ref: '#/components/responses/cloud-to-cloud-retrieve-status-response'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/cloud-to-cloud-retrieve-status-response"
+        "400":
+          $ref: "#/components/responses/genericError"
   /tasks/transfers/import/{integration-id}/logs:
     get:
       summary: Retrieve import logs
@@ -221,8 +231,8 @@ paths:
 
         Use this endpoint to track import progress and troubleshoot potential issues across multiple operations.
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: integration-id
           in: path
           required: true
@@ -234,10 +244,15 @@ paths:
       tags:
         - Upload videos
       responses:
-        '200':
-          $ref: '#/components/responses/cloud-to-cloud-retrieve-import-logs-response'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/cloud-to-cloud-retrieve-import-logs-response"
+        "400":
+          $ref: "#/components/responses/genericError"
+
+  ###################
+  ###   Indexes   ###
+  ###################
+
   /indexes:
     post:
       summary: Create an index
@@ -247,15 +262,15 @@ paths:
       tags:
         - Manage indexes
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
       requestBody:
-        $ref: '#/components/requestBodies/createIndex'
+        $ref: "#/components/requestBodies/createIndex"
       responses:
-        '201':
-          $ref: '#/components/responses/createIndexResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "201":
+          $ref: "#/components/responses/createIndexResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
     get:
       summary: List indexes
       description: |
@@ -264,12 +279,12 @@ paths:
       tags:
         - Manage indexes
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/page_limit'
-        - $ref: '#/components/parameters/sort_by'
-        - $ref: '#/components/parameters/sort_option'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/page_limit"
+        - $ref: "#/components/parameters/sort_by"
+        - $ref: "#/components/parameters/sort_option"
         - name: index_name
           in: query
           description: Filter by the name of an index.
@@ -300,7 +315,7 @@ paths:
           schema:
             type: string
           required: false
-          example: '2024-08-16T16:53:59Z'
+          example: "2024-08-16T16:53:59Z"
         - name: updated_at
           in: query
           description: |
@@ -308,12 +323,12 @@ paths:
           schema:
             type: string
           required: false
-          example: '2024-08-16T16:55:59Z'
+          example: "2024-08-16T16:55:59Z"
       responses:
-        '200':
-          $ref: '#/components/responses/getIndexesResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/getIndexesResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
   /indexes/{index-id}:
     get:
       summary: Retrieve an index
@@ -323,8 +338,8 @@ paths:
       tags:
         - Manage indexes
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: index-id
           in: path
           description: |
@@ -334,20 +349,21 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       responses:
-        '200':
-          $ref: '#/components/responses/getIndexResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/getIndexResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
     put:
       summary: Update an index
       description: |
         This method updates the name of the specified index.
+
       operationId: update-index
       tags:
         - Manage indexes
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: index-id
           in: path
           description: |
@@ -357,12 +373,12 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       requestBody:
-        $ref: '#/components/requestBodies/updateIndex'
+        $ref: "#/components/requestBodies/updateIndex"
       responses:
-        '204':
-          $ref: '#/components/responses/noContentResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "204":
+          $ref: "#/components/responses/noContentResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
     delete:
       summary: Delete an index
       description: This method deletes the specified index and all the videos within it. This action cannot be undone.
@@ -370,8 +386,8 @@ paths:
       tags:
         - Manage indexes
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: index-id
           in: path
           description: |
@@ -381,10 +397,14 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       responses:
-        '204':
-          $ref: '#/components/responses/noContentResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "204":
+          $ref: "#/components/responses/noContentResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+  ##########################
+  ###   indexes/videos   ###
+  ##########################
+
   /indexes/{index-id}/videos:
     get:
       summary: List videos
@@ -394,12 +414,12 @@ paths:
       tags:
         - Manage videos
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/page_limit'
-        - $ref: '#/components/parameters/sort_by'
-        - $ref: '#/components/parameters/sort_option'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/page_limit"
+        - $ref: "#/components/parameters/sort_by"
+        - $ref: "#/components/parameters/sort_option"
         - name: index-id
           in: path
           description: The unique identifier of the index for which the API will retrieve the videos.
@@ -461,7 +481,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '2024-08-16T16:53:59Z'
+          example: "2024-08-16T16:53:59Z"
         - name: updated_at
           in: query
           description: |
@@ -469,7 +489,7 @@ paths:
           required: false
           schema:
             type: string
-          example: '2024-08-16T16:53:59Z'
+          example: "2024-08-16T16:53:59Z"
         - name: user_metadata
           in: query
           description: |
@@ -498,10 +518,10 @@ paths:
           explode: true
           example: category=recentlyAdded&batchNumber=5&rating=9.3&needsReview=true
       responses:
-        '200':
-          $ref: '#/components/responses/getVideoVectorsResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/getVideoVectorsResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
   /indexes/{index-id}/videos/{video-id}:
     get:
       summary: Retrieve video information
@@ -511,9 +531,9 @@ paths:
       tags:
         - Manage videos
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-        - $ref: '#/components/parameters/embedding_option_optional'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - $ref: "#/components/parameters/embedding_option_optional"
         - name: index-id
           in: path
           description: |
@@ -539,12 +559,12 @@ paths:
             type: boolean
           example: true
       responses:
-        '200':
-          $ref: '#/components/responses/getVideoVectorResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
-        '404':
-          $ref: '#/components/responses/notFound'
+        "200":
+          $ref: "#/components/responses/getVideoVectorResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+        "404":
+          $ref: "#/components/responses/notFound"
     put:
       summary: Update video information
       description: Use this method to update the metadata of a video such as file name.
@@ -552,8 +572,8 @@ paths:
       tags:
         - Manage videos
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: index-id
           in: path
           description: |
@@ -571,22 +591,54 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       requestBody:
-        $ref: '#/components/requestBodies/update-video-vector'
+        $ref: "#/components/requestBodies/update-video-vector"
       responses:
-        '204':
-          $ref: '#/components/responses/noContentResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "204":
+          $ref: "#/components/responses/noContentResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+    patch:
+      summary: Partial update video information
+      description: Use this method to update one or more fields of the metadata of a video such as file name. Also, you can delete a field by setting it to `null`.
+      operationId: partial-update-video-information
+      tags:
+        - Manage videos
+      parameters:
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - name: index-id
+          in: path
+          description: |
+            The unique identifier of the index to which the video has been uploaded.
+          required: true
+          schema:
+            type: string
+          example: 6298d673f1090f1100476d4c
+        - name: video-id
+          in: path
+          description: |
+            The unique identifier of the video to update.
+          required: true
+          schema:
+            type: string
+          example: 6298d673f1090f1100476d4c
+      requestBody:
+        $ref: "#/components/requestBodies/partial-update-video-vector"
+      responses:
+        "204":
+          $ref: "#/components/responses/noContentResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
     delete:
       summary: Delete video information
       operationId: delete-video-information
       tags:
         - Manage videos
       description: |
-        This method deletes all the information about the specified video This action cannot be undone.
+        This method deletes all the information about the specified video. This action cannot be undone.
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: index-id
           in: path
           description: |
@@ -604,10 +656,15 @@ paths:
             type: string
           example: 6298d673f1090f1100476d4c
       responses:
-        '204':
-          $ref: '#/components/responses/noContentResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "204":
+          $ref: "#/components/responses/noContentResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+
+  ####################
+  ###   Generate   ###
+  ####################
+
   /summarize:
     post:
       summary: Summaries, chapters, or highlights
@@ -618,19 +675,19 @@ paths:
         This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
         </Note>
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
       operationId: summarize
       tags:
         - Analyze videos
       requestBody:
-        $ref: '#/components/requestBodies/summarizeRequest'
+        $ref: "#/components/requestBodies/summarizeRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/summarizeResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
-        '429':
+        "200":
+          $ref: "#/components/responses/summarizeResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+        "429":
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
   /gist:
@@ -643,21 +700,22 @@ paths:
         This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
         </Note>
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
       operationId: gist
       tags:
         - Analyze videos
       requestBody:
-        $ref: '#/components/requestBodies/gistRequest'
+        $ref: "#/components/requestBodies/gistRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/gistResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
-        '429':
+        "200":
+          $ref: "#/components/responses/gistResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+        "429":
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
+
   /generate:
     post:
       deprecated: true
@@ -701,8 +759,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/StreamGenerateResponse'
-                  - $ref: '#/components/schemas/NonStreamGenerateResponse'
+                  - $ref: '#/components/schemas/StreamAnalyzeResponse'
+                  - $ref: '#/components/schemas/NonStreamAnalyzeResponse'
               examples:
                 non-streaming-response:
                   summary: Non-streamed response
@@ -750,19 +808,19 @@ paths:
       tags:
         - Analyze videos
       requestBody:
-        $ref: '#/components/requestBodies/generateTextRepresentationRequest'
+        $ref: "#/components/requestBodies/generateTextRepresentationRequest"
       responses:
-        '200':
+        "200":
           description: The specified video has successfully been processed.
           headers:
             X-Ratelimit-Limit:
-              $ref: '#/components/headers/X-Ratelimit-Limit'
+              $ref: "#/components/headers/X-Ratelimit-Limit"
             X-Ratelimit-Remaining:
-              $ref: '#/components/headers/X-Ratelimit-Remaining'
+              $ref: "#/components/headers/X-Ratelimit-Remaining"
             X-Ratelimit-Used:
-              $ref: '#/components/headers/X-Ratelimit-Used'
+              $ref: "#/components/headers/X-Ratelimit-Used"
             X-Ratelimit-Reset:
-              $ref: '#/components/headers/X-Ratelimit-Reset'
+              $ref: "#/components/headers/X-Ratelimit-Reset"
             Transfer-Encoding:
               schema:
                 type: string
@@ -773,8 +831,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/StreamGenerateResponse'
-                  - $ref: '#/components/schemas/NonStreamGenerateResponse'
+                  - $ref: "#/components/schemas/StreamAnalyzeResponse"
+                  - $ref: "#/components/schemas/NonStreamAnalyzeResponse"
               examples:
                 non-streaming-response:
                   summary: Non-streamed response
@@ -800,11 +858,16 @@ paths:
                       generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
                       usage:
                         output_tokens: 100
-        '400':
-          $ref: '#/components/responses/genericError'
-        '429':
+        "400":
+          $ref: "#/components/responses/genericError"
+        "429":
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
+
+  #############################################
+  ###   Text, image, and audio embeddings   ###
+  #############################################
+
   /embed:
     post:
       summary: Create embeddings for text, image, and audio
@@ -838,15 +901,20 @@ paths:
       tags:
         - Create text, image, and audio embeddings
       requestBody:
-        $ref: '#/components/requestBodies/createSyncEmbeddingRequest'
+        $ref: "#/components/requestBodies/createSyncEmbeddingRequest"
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/multipart'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/multipart"
       responses:
-        '200':
-          $ref: '#/components/responses/createSyncEmbeddingResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/createSyncEmbeddingResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+
+  ############################
+  ###   Video embeddings   ###
+  ############################
+
   /embed/tasks:
     post:
       summary: Create a video embedding task
@@ -862,7 +930,7 @@ paths:
         <Accordion title="Video requirements">
           The videos you wish to upload must meet the following requirements:
           - **Video resolution**: Must be at least 360x360 and must not exceed 3840x2160.
-          - **Aspect ratio**: Must be one of 1:1, 4:3, 4:5, 5:4, 16:9, or 9:16.
+          - **Aspect ratio**: Must be one of 1:1, 4:3, 4:5, 5:4, 16:9, 9:16, or 17:9.
           - **Video and audio formats**: Your video files must be encoded in the video and audio formats listed on the [FFmpeg Formats Documentation](https://ffmpeg.org/ffmpeg-formats.html) page. For videos in other formats, contact us at support@twelvelabs.io.
           - **Duration**: Must be between 4 seconds and 2 hours (7,200s).
           - **File size**: Must not exceed 2 GB.
@@ -876,17 +944,17 @@ paths:
         </Note>
       operationId: create-video-embedding-task
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/multipart'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/multipart"
       tags:
         - Create video embeddings
       requestBody:
-        $ref: '#/components/requestBodies/createVideoEmbeddingTaskRequest'
+        $ref: "#/components/requestBodies/createVideoEmbeddingTaskRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/createVideoEmbeddingTaskResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/createVideoEmbeddingTaskResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
     get:
       summary: List video embedding tasks
       description: |
@@ -900,17 +968,17 @@ paths:
       tags:
         - Create video embeddings
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/started_at'
-        - $ref: '#/components/parameters/ended_at'
-        - $ref: '#/components/parameters/embedding_tasks_filter_status'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/page_limit'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/started_at"
+        - $ref: "#/components/parameters/ended_at"
+        - $ref: "#/components/parameters/embedding_tasks_filter_status"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/page_limit"
       responses:
-        '200':
-          $ref: '#/components/responses/listVideoEmbeddingTasksResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/listVideoEmbeddingTasksResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
   /embed/tasks/{task_id}/status:
     get:
       summary: Retrieve the status of a video embedding task
@@ -923,16 +991,16 @@ paths:
         - `failed`: The task could not be completed, and the embeddings haven't been created.
       operationId: retrieve-video-embedding-task
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-        - $ref: '#/components/parameters/video-embedding-task-id'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - $ref: "#/components/parameters/video-embedding-task-id"
       tags:
         - Create video embeddings
       responses:
-        '200':
-          $ref: '#/components/responses/retrieveVideoEmbeddingTaskStatusResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/retrieveVideoEmbeddingTaskStatusResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
   /embed/tasks/{task_id}:
     get:
       summary: Retrieve video embeddings
@@ -940,17 +1008,22 @@ paths:
         This method retrieves embeddings for a specific video embedding task. Ensure the task status is `ready` before invoking this method. Refer to the [Retrieve the status of a video embedding tasks](/v1.3/api-reference/video-embeddings/retrieve-video-embedding-task-status) page for instructions on checking the task status.
       operationId: retrieve-video-embedding
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-        - $ref: '#/components/parameters/video-embedding-task-id'
-        - $ref: '#/components/parameters/embedding_option'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+        - $ref: "#/components/parameters/video-embedding-task-id"
+        - $ref: "#/components/parameters/embedding_option"
       tags:
         - Create video embeddings
       responses:
-        '200':
-          $ref: '#/components/responses/retrieveVideoEmbeddingResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
+        "200":
+          $ref: "#/components/responses/retrieveVideoEmbeddingResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+
+  #################################
+  ###   Any-to-video search   ###
+  #################################
+
   /search:
     post:
       summary: Make any-to-video search requests
@@ -979,18 +1052,18 @@ paths:
         </Note>
       operationId: any-to-video-search
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/multipart'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/multipart"
       tags:
         - Any-to-video search
       requestBody:
-        $ref: '#/components/requestBodies/any-to-video-search'
+        $ref: "#/components/requestBodies/any-to-video-search"
       responses:
-        '200':
-          $ref: '#/components/responses/searchResultsResponse'
-        '400':
-          $ref: '#/components/responses/genericError'
-        '429':
+        "200":
+          $ref: "#/components/responses/searchResultsResponse"
+        "400":
+          $ref: "#/components/responses/genericError"
+        "429":
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
   /search/{page-token}:
@@ -1006,8 +1079,8 @@ paths:
         </Note>
       operationId: any-to-video--retrieve-specific-page
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
         - name: page-token
           in: path
           required: true
@@ -1015,12 +1088,25 @@ paths:
             A token that identifies the page to retrieve.
           schema:
             type: string
-            example: '1234567890'
+            example: "1234567890"
+        - name: include_user_metadata
+          in: query
+          required: false
+          description: |
+            Specifies whether to include user-defined metadata in the search results.
+          schema:
+            type: boolean
+            example: true
       responses:
-        '200':
-          $ref: '#/components/responses/searchResultsResponsePageId'
-        '400':
-          $ref: '#/components/responses/searchResultsError'
+        "200":
+          $ref: "#/components/responses/searchResultsResponsePageId"
+        "400":
+          $ref: "#/components/responses/searchResultsError"
+
+#######################
+###   Components   ####
+#######################
+
 components:
   schemas:
     ImportLog:
@@ -1040,12 +1126,12 @@ components:
           type: string
           format: date-time
           description: The date and time, in the RFC 3339 format when the import process was initiated.
-          example: '2024-09-22T13:25:00Z'
+          example: "2024-09-22T13:25:00Z"
         ended_at:
           type: string
           format: date-time
           description: The date and time, in the RFC 3339 format, when the platform completed importing your videos. A `null` value indicates that the import process is still ongoing.
-          example: '2024-09-22T13:25:00Z'
+          example: "2024-09-22T13:25:00Z"
         video_status:
           type: object
           description: Counts of files in different statuses. See the [Task object](/v1.3/api-reference/tasks/the-task-object) page for details on each status.
@@ -1108,8 +1194,8 @@ components:
       example:
         index_id: 6298d673f1090f1100476d4c
         index_name: myIndex
-        created_at: '2024-09-22T13:25:00Z'
-        ended_at: '2024-09-22T13:25:00Z'
+        created_at: "2024-09-22T13:25:00Z"
+        ended_at: "2024-09-22T13:25:00Z"
         video_status:
           ready: 10
           validating: 2
@@ -1137,7 +1223,7 @@ components:
           type: string
           format: date-time
           description: The date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), when the video was added to the import process.
-          example: '2024-09-22T13:25:00Z'
+          example: "2024-09-22T13:25:00Z"
       required:
         - video_id
         - filename
@@ -1145,7 +1231,7 @@ components:
       example:
         video_id: 6298d673f1090f1100476d4c
         filename: 01.mp4
-        created_at: '2024-09-22T13:25:00Z'
+        created_at: "2024-09-22T13:25:00Z"
     VideoItemFailed:
       description: |
         An object that contains information about a video file that failed to import.
@@ -1159,7 +1245,7 @@ components:
           type: string
           format: date-time
           description: The date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), when the video was added to the import process.
-          example: '2024-09-22T13:25:00Z'
+          example: "2024-09-22T13:25:00Z"
         error_message:
           type: string
           description: The error message explaining why the video failed to import.
@@ -1170,7 +1256,7 @@ components:
         - error_message
       example:
         filename: 01.mp4
-        created_at: '2024-09-22T13:25:00Z'
+        created_at: "2024-09-22T13:25:00Z"
         error_message: The file is not a valid video file.
     TranscriptionData:
       type: array
@@ -1189,11 +1275,11 @@ components:
           value:
             type: string
             description: Text representing the spoken words within this time range.
-            example: Hello, how are you?
+            example: "Hello, how are you?"
       example:
         - start: 10.5
           end: 15.2
-          value: Hello, how are you?
+          value: "Hello, how are you?"
     EmbeddingResponse:
       type: object
       description: |
@@ -1207,16 +1293,16 @@ components:
           example: Marengo-retrieval-2.7
         text_embedding:
           allOf:
-            - $ref: '#/components/schemas/TextEmbeddingResult'
-          description: An object that contains the generated text embedding vector and associated information. Present when a text was processed.
+            - $ref: "#/components/schemas/TextEmbeddingResult"
+          description: An object that contains the generated text embedding vector and associated information. Present when text was processed.
         image_embedding:
           allOf:
-            - $ref: '#/components/schemas/ImageEmbeddingResult'
-          description: An object that contains the generated image embedding vector and associated information. Present when an image was processed.
+            - $ref: "#/components/schemas/ImageEmbeddingResult"
+          description: An object that contains the generated image embedding vector and associated information. Present when image was processed.
         audio_embedding:
           allOf:
-            - $ref: '#/components/schemas/AudioEmbeddingResult'
-          description: An object that contains the generated audio embedding vector and associated information. Present when an audio file was processed.
+            - $ref: "#/components/schemas/AudioEmbeddingResult"
+          description: An object that contains the generated audio embedding vector and associated information. Present when audio was processed.
       example:
         model_name: Marengo-retrieval-2.7
         audio_embedding:
@@ -1255,7 +1341,7 @@ components:
           description: |
             An object that contains the embedding.
           items:
-            $ref: '#/components/schemas/BaseSegment'
+            $ref: "#/components/schemas/BaseSegment"
           example:
             - float:
                 - -0.042632885
@@ -1277,7 +1363,7 @@ components:
           description: |
             An object that contains the embedding and its start time.
           items:
-            $ref: '#/components/schemas/AudioSegment'
+            $ref: "#/components/schemas/AudioSegment"
           example:
             - float:
                 - -0.042632885
@@ -1288,7 +1374,7 @@ components:
           description: Error message if the embedding generation failed.
           example: Audio file is not valid.
         metadata:
-          $ref: '#/components/schemas/BaseEmbeddingMetadata'
+          $ref: "#/components/schemas/BaseEmbeddingMetadata"
       example:
         segments:
           - float:
@@ -1312,14 +1398,14 @@ components:
           description: |
             An object that contains the embedding.
           items:
-            $ref: '#/components/schemas/BaseSegment'
+            $ref: "#/components/schemas/BaseSegment"
           example:
             - float:
                 - -0.042632885
                 - 0.014312328
                 - 0.029209055
         metadata:
-          $ref: '#/components/schemas/BaseEmbeddingMetadata'
+          $ref: "#/components/schemas/BaseEmbeddingMetadata"
       example:
         segments:
           - float:
@@ -1369,7 +1455,7 @@ components:
       description: |
         An object that contains the audio embedding and its start time.
       allOf:
-        - $ref: '#/components/schemas/BaseSegment'
+        - $ref: "#/components/schemas/BaseSegment"
         - type: object
           properties:
             start_offset_sec:
@@ -1386,7 +1472,7 @@ components:
       description: |
         An object that contains the video embedding and its start time. Each segment is between 2 and 10 seconds.
       allOf:
-        - $ref: '#/components/schemas/AudioSegment'
+        - $ref: "#/components/schemas/AudioSegment"
         - type: object
           properties:
             end_offset_sec:
@@ -1439,19 +1525,19 @@ components:
         An object that contains the search results.
       properties:
         score:
-          $ref: '#/components/schemas/ScoreSearchTerms'
+          $ref: "#/components/schemas/ScoreSearchTerms"
         start:
-          $ref: '#/components/schemas/StartTime'
+          $ref: "#/components/schemas/StartTime"
         end:
-          $ref: '#/components/schemas/EndTime'
+          $ref: "#/components/schemas/EndTime"
         video_id:
           type: string
           description: A string representing the unique identifier of the video. Once the platform indexes a video, it assigns a unique identifier. Note that this is different from the identifier of the video indexing task.
           example: 639963a1ce36463e0199c8c7
         confidence:
-          $ref: '#/components/schemas/confidence'
+          $ref: "#/components/schemas/confidence"
         thumbnail_url:
-          $ref: '#/components/schemas/thumbnail_url'
+          $ref: "#/components/schemas/thumbnail_url"
         transcription:
           type: string
           description: A transcription of the spoken words that are captured in the video. Note that the official SDKs will support this feature in a future release.
@@ -1460,6 +1546,8 @@ components:
           type: string
           description: A string representing the unique identifier of the video. It only appears when the `group_by=video` parameter is used in the request.
           example: 639963a1ce36463e0199c8c7
+        user_metadata:
+          $ref: "#/components/schemas/UserMetadata"
         clips:
           type: array
           description: An array that contains detailed information about the clips that match your query. The platform returns this array only when the `group_by` parameter is set to `video` in the request.
@@ -1467,15 +1555,15 @@ components:
             type: object
             properties:
               score:
-                $ref: '#/components/schemas/ScoreSearchTerms'
+                $ref: "#/components/schemas/ScoreSearchTerms"
               start:
-                $ref: '#/components/schemas/StartTime'
+                $ref: "#/components/schemas/StartTime"
               end:
-                $ref: '#/components/schemas/EndTime'
+                $ref: "#/components/schemas/EndTime"
               confidence:
-                $ref: '#/components/schemas/confidence'
+                $ref: "#/components/schemas/confidence"
               thumbnail_url:
-                $ref: '#/components/schemas/thumbnail_url'
+                $ref: "#/components/schemas/thumbnail_url"
               transcription:
                 type: string
                 description: A transcription of the spoken words that are captured in the clip. Note that the official SDKs will support this feature in a future release.
@@ -1485,7 +1573,7 @@ components:
                 description: A string representing the unique identifier of the video for the corresponding clip.
                 example: 639963a1ce36463e0199c8c7
               user_metadata:
-                $ref: '#/components/schemas/UserMetadata'
+                $ref: "#/components/schemas/UserMetadata"
       example:
         score: 85.08
         start: 515.4375
@@ -1520,13 +1608,13 @@ components:
       description: An object that provides information about pagination.
       properties:
         limit_per_page:
-          $ref: '#/components/schemas/limit_per_page_simple'
+          $ref: "#/components/schemas/limit_per_page_simple"
         page:
-          $ref: '#/components/schemas/page'
+          $ref: "#/components/schemas/page"
         total_page:
-          $ref: '#/components/schemas/total_page'
+          $ref: "#/components/schemas/total_page"
         total_results:
-          $ref: '#/components/schemas/total_results'
+          $ref: "#/components/schemas/total_results"
       example:
         limit_per_page: 10
         page: 1
@@ -1555,7 +1643,7 @@ components:
           description: |
             An array that contains your search results. For each match found, the model returns the following fields:
           items:
-            $ref: '#/components/schemas/SearchItem'
+            $ref: "#/components/schemas/SearchItem"
           example:
             - score: 85.08
               start: 515.4375
@@ -1576,23 +1664,23 @@ components:
             page_expires_at:
               type: string
               description: A string representing the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the page expires.
-              example: '2024-03-01T00:00:00Z'
+              example: "2024-03-01T00:00:00Z"
             total_results:
               type: integer
               description: |
                 The total number of results. When grouping by video, this field represents the total number of video clips matching your query. Otherwise , this field represents the total number of videos.
               example: 100
             total_inner_matches:
-              $ref: '#/components/schemas/total_inner_matches'
+              $ref: "#/components/schemas/total_inner_matches"
             next_page_token:
-              $ref: '#/components/schemas/next_page_token'
+              $ref: "#/components/schemas/next_page_token"
           example:
             limit_per_page: 10
-            page_expires_at: '2024-03-01T00:00:00Z'
+            page_expires_at: "2024-03-01T00:00:00Z"
             total_results: 100
             next_page_token: d1a8f7bd-31c8-4d55-9bb7-c1473de4b2dc-1
         search_pool:
-          $ref: '#/components/schemas/search_pool'
+          $ref: "#/components/schemas/search_pool"
       example:
         search_pool:
           total_count: 10
@@ -1638,6 +1726,7 @@ components:
         - none
       type: string
       example: low
+
     Index:
       title: Index
       description: |
@@ -1651,11 +1740,11 @@ components:
         created_at:
           type: string
           description: A string representing the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the index was created.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         updated_at:
           type: string
           description: A string representing the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the index has been updated.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         expires_at:
           type: string
           description: |
@@ -1664,7 +1753,7 @@ components:
             If you're on the Free plan, the platform retains your index data for 90 days from creation. After this period, the platform deletes your index data, and this action cannot be undone. To continue using your index beyond this period, consider upgrading to the Developer plan, which offers unlimited index retention. For details, see the [Upgrade your plan](/v1.3/docs/get-started/manage-your-plan#upgrade-your-plan) section.
 
             If you're on the Developer plan, this field is set to `null`, indicating no expiration.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         index_name:
           type: string
           description: A string representing the name of the index.
@@ -1714,9 +1803,9 @@ components:
             - thumbnail
       example:
         _id: 663da73b31cdd0c1f638a8e6
-        created_at: '2024-03-01T00:00:00Z'
-        updated_at: '2024-03-01T00:00:00Z'
-        expires_at: '2024-03-01T00:00:00Z'
+        created_at: "2024-03-01T00:00:00Z"
+        updated_at: "2024-03-01T00:00:00Z"
+        expires_at: "2024-03-01T00:00:00Z"
         index_name: My Index
         total_duration: 10
         video_count: 10
@@ -1731,7 +1820,7 @@ components:
       description: |
         An object containing metadata associated with the embedding.
       allOf:
-        - $ref: '#/components/schemas/BaseEmbeddingMetadata'
+        - $ref: "#/components/schemas/BaseEmbeddingMetadata"
         - type: object
           properties:
             video_clip_length:
@@ -1785,14 +1874,14 @@ components:
           format: date-time
           description: |
             The date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the video embedding task was created.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         video_embedding:
           type: object
           description: |
             An object containing the metadata associated with the embedding.
           properties:
             metadata:
-              $ref: '#/components/schemas/VideoEmbeddingMetadata'
+              $ref: "#/components/schemas/VideoEmbeddingMetadata"
           example:
             metadata:
               input_filename: /Users/myuser/myvideo.mp4
@@ -1805,7 +1894,7 @@ components:
         _id: 663da73b31cdd0c1f638a8e6
         model_name: Marengo-retrieval-2.7
         status: processing
-        created_at: '2024-03-01T00:00:00Z'
+        created_at: "2024-03-01T00:00:00Z"
         video_embedding:
           metadata:
             input_filename: /Users/myuser/myvideo.mp4
@@ -1834,12 +1923,12 @@ components:
           type: string
           description: |
             A string indicating the date and time, in the RFC RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the task was created.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         updated_at:
           type: string
           description: |
             A string indicating the date and time, in the RFC RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the task object was last updated. The platform updates this field every time the video indexing task transitions to a different state.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         status:
           type: string
           description: |
@@ -1875,8 +1964,8 @@ components:
       example:
         _id: 663da73b31cdd0c1f638a8e6
         video_id: 62a1ec6d9ea24f052b971a0f
-        created_at: '2024-03-01T00:00:00Z'
-        updated_at: '2024-03-01T00:00:00Z'
+        created_at: "2024-03-01T00:00:00Z"
+        updated_at: "2024-03-01T00:00:00Z"
         status: ready
         index_id: 630aff993fcee0532cb809d0
         system_metadata:
@@ -1889,7 +1978,7 @@ components:
           thumbnail_urls:
             - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000001.jpg
           status: COMPLETE
-          updated_at: '2024-01-16T07:59:40.879Z'
+          updated_at: "2024-01-16T07:59:40.879Z"
     videoVector:
       description: |
         A video object that contains information about the video.
@@ -1905,17 +1994,17 @@ components:
           type: string
           description: |
             A string indicating the date and time, in the RFC RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the video indexing task was created.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         updated_at:
           type: string
           description: |
             A string indicating the date and time, in the RFC RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the video indexing task object was last updated. The platform updates this field every time the video indexing task transitions to a different state.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         indexed_at:
           type: string
           description: |
             A string indicating the date and time, in the RFC RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the video indexing task has been completed.
-          example: '2024-03-01T00:00:00Z'
+          example: "2024-03-01T00:00:00Z"
         system_metadata:
           type: object
           description: |
@@ -1948,9 +2037,9 @@ components:
             size: 65749715
       example:
         _id: 663da73b31cdd0c1f638a8e6
-        created_at: '2024-03-01T00:00:00Z'
-        updated_at: '2024-03-01T00:00:00Z'
-        indexed_at: '2024-03-01T00:00:00Z'
+        created_at: "2024-03-01T00:00:00Z"
+        updated_at: "2024-03-01T00:00:00Z"
+        indexed_at: "2024-03-01T00:00:00Z"
         metadata:
           filename: 01.mp4
           duration: 531.998133
@@ -1979,11 +2068,7 @@ components:
             - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000003.jpg
         status:
           type: string
-          enum:
-            - PROCESSING
-            - COMPLETE
-            - CANCELED
-            - ERROR
+          enum: [PROCESSING, COMPLETE, CANCELED, ERROR]
           description: |
             A string representing the encoding status of the video file from its original format to a streamable format.
             Possible values:
@@ -1995,7 +2080,7 @@ components:
         updated_at:
           type: string
           description: A string indicating the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the encoding status was last updated.
-          example: '2024-01-09T11:17:15.296Z'
+          example: "2024-01-09T11:17:15.296Z"
       example:
         video_url: https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/stream/c924f34a-144e-41df-bf2a-c693703fa134.m3u8
         thumbnail_urls:
@@ -2003,8 +2088,8 @@ components:
           - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000002.jpg
           - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000003.jpg
         status: COMPLETE
-        updated_at: '2024-01-09T11:17:15.296Z'
-    StreamGenerateResponse:
+        updated_at: "2024-01-09T11:17:15.296Z"
+    StreamAnalyzeResponse:
       type: object
       title: Streamed response
       description: |
@@ -2021,9 +2106,9 @@ components:
         - For `text_generation` events, process the `text` field as it arrives. Depending on your application's requirements, this may involve displaying the text incrementally, storing it for later use, or performing any tasks.
         - Use the `stream_start` and `stream_end` events to manage the lifecycle of your streaming session.
       oneOf:
-        - $ref: '#/components/schemas/StreamStartResponse'
-        - $ref: '#/components/schemas/StreamTextResponse'
-        - $ref: '#/components/schemas/StreamEndResponse'
+        - $ref: "#/components/schemas/StreamStartResponse"
+        - $ref: "#/components/schemas/StreamTextResponse"
+        - $ref: "#/components/schemas/StreamEndResponse"
     StreamStartResponse:
       type: object
       title: Stream start
@@ -2090,7 +2175,7 @@ components:
                 The same unique identifier provided in the `stream_start` event.
               example: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
             usage:
-              $ref: '#/components/schemas/TokenUsage'
+              $ref: "#/components/schemas/TokenUsage"
           example:
             generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
             usage:
@@ -2099,7 +2184,7 @@ components:
         event_type: stream_end
         metadata:
           generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-    NonStreamGenerateResponse:
+    NonStreamAnalyzeResponse:
       type: object
       title: Non-streamed response
       description: |
@@ -2116,7 +2201,7 @@ components:
             The generated text based on the prompt you provided.
           example: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
         usage:
-          $ref: '#/components/schemas/TokenUsage'
+          $ref: "#/components/schemas/TokenUsage"
       example:
         id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
         data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
@@ -2134,6 +2219,7 @@ components:
             The number of tokens in the generated text.
       example:
         output_tokens: 100
+
     UserMetadata:
       type: object
       description: |
@@ -2167,6 +2253,228 @@ components:
         batchNumber: 5
         rating: 9.3
         needsReview: true
+    SummarizeSummaryResult:
+      type: object
+      description: |
+        An object that represents the response from a summarize summary operation.
+      properties:
+        summarize_type:
+          type: string
+          enum: [summary]
+          description: |
+            The type of summarize response.
+        id:
+          description: |
+            Unique identifier of the response.
+          type: string
+          example: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
+        summary:
+          description: |
+            A brief report of the main points of the video.
+          type: string
+          example: |
+            Black Friday shoppers are shown in a mall, pushing and shoving through the crowds. A news reporter talks about shopping mania and its impact on stores. He mentions that stores are filled to the brim and that the hunt for deals can make people miserable. A woman talks to the camera about how people have lost their minds and how the American dream has become associated with material possessions.
+        usage:
+          $ref: "#/components/schemas/TokenUsage"
+      required:
+        - summarize_type
+      example:
+        summarize_type: summary
+        id: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
+        summary: Black Friday shoppers are shown in a mall, pushing and shoving through the crowds. A news reporter talks about shopping mania and its impact on stores. He mentions that stores are filled to the brim and that the hunt for deals can make people miserable. A woman talks to the camera about how people have lost their minds and how the American dream has become associated with material possessions.
+        usage:
+          output_tokens: 100
+    SummarizeChapterResult:
+      type: object
+      description: |
+        An object that represents the response from a summarize chapter operation.
+      properties:
+        summarize_type:
+          type: string
+          enum: [chapter]
+          description: |
+            The type of summarize response.
+        id:
+          description: |
+            Unique identifier of the response.
+          type: string
+          example: da3cdd02-dff8-4712-a2a9-9b44f342c039
+        chapters:
+          description: |
+            An array that contains details about the detected chapters and their content.
+          type: array
+          items:
+            type: object
+            description: |
+              An object that contains details about a chapter. Each chapter has a unique number, start time, end time, title, and summary.
+            properties:
+              chapter_number:
+                description: |
+                  Represents the sequence number of the chapter. Note that this field starts at 0. Ensure to interpret it accordingly in your application.
+                type: integer
+                example: 0
+              start:
+                description: |
+                  The starting time of the chapter, measured in seconds from the beginning of the video.
+                type: integer
+                example: 0
+                deprecated: true
+              end:
+                description: |
+                  The ending time of the chapter, measured in seconds from the beginning of the video.
+                type: integer
+                example: 30
+                deprecated: true
+              start_sec:
+                description: |
+                  The starting time of the chapter, measured in seconds from the beginning of the video.
+                type: number
+                format: float
+                example: 0
+              end_sec:
+                description: |
+                  The ending time of the chapter, measured in seconds from the beginning of the video.
+                type: number
+                format: float
+                example: 30
+              chapter_title:
+                description: |
+                  The title of the chapter.
+                type: string
+                example: Graduation and Moving Home
+              chapter_summary:
+                description: |
+                  A brief summary describing the content of the chapter.
+                type: string
+                example: The woman talks about her recent graduation and moving back home.
+            example:
+              chapter_number: 0
+              start: 15
+              end: 30
+              chapter_title: Graduation and Moving Home
+              chapter_summary: The woman talks about her recent graduation and moving back home.
+          example:
+            - chapter_number: 0
+              start: 15
+              end: 30
+              chapter_title: Graduation and Moving Home
+              chapter_summary: The woman talks about her recent graduation and moving back home.
+            - chapter_number: 1
+              start: 30
+              end: 45
+              chapter_title: Outdoor Adventures
+              chapter_summary: The woman discusses spending time outdoors and getting a tan.
+            - chapter_number: 2
+              start: 45
+              end: 60
+              chapter_title: Shopping Hauls
+              chapter_summary: The woman talks about her recent shopping spree and purchases.
+        usage:
+          $ref: "#/components/schemas/TokenUsage"
+      required:
+        - summarize_type
+      example:
+        summarize_type: chapter
+        id: 663da73b31cdd0c1f638a8e6
+        chapters:
+          - chapter_number: 0
+            start: 15
+            end: 30
+            chapter_title: Graduation and Moving Home
+            chapter_summary: The woman talks about her recent graduation and moving back home.
+        usage:
+          output_tokens: 100
+    SummarizeHighlightResult:
+      type: object
+      description: |
+        An object that represents the response from a summarize highlight operation.
+      properties:
+        summarize_type:
+          type: string
+          enum: [highlight]
+          description: |
+            The type of summarize response.
+        id:
+          description: |
+            Unique identifier of the response.
+          type: string
+          example: 2f2a504f-6956-446c-84d8-29d86f793c66
+        highlights:
+          description: |
+            An array that contains the highlights.
+          type: array
+          items:
+            type: object
+            description: |
+              An object that provides a brief snapshot of a specific part of the video.
+            properties:
+              start:
+                description: |
+                  The starting time of the highlight, measured in seconds from the beginning of the video.
+                type: integer
+                example: 0
+                deprecated: true
+              end:
+                description: |
+                  The ending time of the highlight, measured in seconds from the beginning of the video.
+                type: integer
+                example: 30
+                deprecated: true
+              start_sec:
+                description: |
+                  The starting time of the highlight, measured in seconds from the beginning of the video.
+                type: number
+                format: float
+                example: 0
+              end_sec:
+                description: |
+                  The ending time of the highlight, measured in seconds from the beginning of the video.
+                type: number
+                format: float
+                example: 30
+              highlight:
+                description: |
+                  The tile of the highlight.
+                type: string
+                example: A woman vlogs about her summer day, sharing her experience
+              highlight_summary:
+                type: string
+                description: |
+                  A brief description that captures the essence of this part of the video.
+                example: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+            example:
+              start: 0
+              end: 30
+              highlight: A woman vlogs about her summer day, sharing her experience
+              highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+          example:
+            - start: 0
+              end: 30
+              highlight: A woman vlogs about her summer day, sharing her experience
+              highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+            - start: 30
+              end: 60
+              highlight: A woman is making a video of her food preparation and tasting.
+              highlight_summary: A woman demonstrates how to make a delicious bread salad with tomatoes and cheese while explaining the process.
+        usage:
+          $ref: "#/components/schemas/TokenUsage"
+      required:
+        - summarize_type
+      example:
+        summarize_type: highlight
+        id: 663da73b31cdd0c1f638a8e6
+        highlights:
+          - start: 0
+            end: 30
+            highlight: A woman vlogs about her summer day, sharing her experience
+            highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
+        usage:
+          output_tokens: 100
+
+  ######################
+  ###   Parameters   ###
+  ######################
+
   parameters:
     video-embedding-task-id:
       name: task_id
@@ -2176,7 +2484,8 @@ components:
       required: true
       schema:
         type: string
-        example: 663da73b31cdd0c1f638a8e6
+        example: "663da73b31cdd0c1f638a8e6"
+
     embedding_option_optional:
       name: embedding_option
       in: query
@@ -2195,12 +2504,11 @@ components:
         type: array
         items:
           type: string
-          enum:
-            - visual-text
-            - audio
+          enum: [visual-text, audio]
           uniqueItems: true
       style: form
       explode: true
+
     embedding_option:
       name: embedding_option
       in: query
@@ -2215,12 +2523,11 @@ components:
         type: array
         items:
           type: string
-          enum:
-            - visual-text
-            - audio
+          enum: [visual-text, audio]
         uniqueItems: true
       style: form
       explode: true
+
     Content-Type:
       name: Content-Type
       in: header
@@ -2393,7 +2700,7 @@ components:
         Filter video indexing tasks by the creation date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"). The platform returns the video indexing tasks that were created on the specified date at or after the given time.
       schema:
         type: string
-        example: '2024-03-01T00:00:00Z'
+        example: "2024-03-01T00:00:00Z"
       required: false
     updated_at:
       name: updated_at
@@ -2402,7 +2709,7 @@ components:
         Filter video indexing tasks by the last update date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"). The platform returns the video indexing tasks that were updated on the specified date at or after the given time.
       schema:
         type: string
-        example: '2024-03-01T00:00:00Z'
+        example: "2024-03-01T00:00:00Z"
       required: false
     ended_at:
       name: ended_at
@@ -2411,7 +2718,7 @@ components:
       in: query
       schema:
         type: string
-        example: '2024-03-01T00:00:00Z'
+        example: "2024-03-01T00:00:00Z"
       required: false
     started_at:
       name: started_at
@@ -2420,7 +2727,7 @@ components:
       in: query
       schema:
         type: string
-        example: '2024-03-01T00:00:00Z'
+        example: "2024-03-01T00:00:00Z"
       required: false
     embedding_tasks_filter_status:
       name: status
@@ -2430,6 +2737,10 @@ components:
         type: string
         example: processing
       required: false
+
+  #####################################
+  ###   Reusable response headers   ###
+  #####################################
   headers:
     X-Ratelimit-Limit:
       schema:
@@ -2451,6 +2762,10 @@ components:
         type: number
         example: 1718777276
       description: The time at which the current rate limit window resets, expressed in UTC epoch seconds.
+
+  #####################
+  ###   Responses   ###
+  #####################
   responses:
     cloud-to-cloud-retrieve-import-logs-response:
       description: The import logs have successfully been retrieved.
@@ -2463,12 +2778,12 @@ components:
                 type: array
                 description: An array that contains the import logs.
                 items:
-                  $ref: '#/components/schemas/ImportLog'
+                  $ref: "#/components/schemas/ImportLog"
                 example:
                   - index_id: 66ed1ed7046a96796303a06f
                     index_name: my sample index
-                    created_at: '2024-09-24T13:22:00Z'
-                    ended_at: '2024-09-24T13:23:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
+                    ended_at: "2024-09-24T13:23:00Z"
                     video_status:
                       ready: 5
                       validating: 2
@@ -2483,8 +2798,8 @@ components:
               data:
                 - index_id: 66ed1ed7046a96796303a06f
                   index_name: my sample index
-                  created_at: '2024-09-24T13:22:00Z'
-                  ended_at: '2024-09-24T13:23:00Z'
+                  created_at: "2024-09-24T13:22:00Z"
+                  ended_at: "2024-09-24T13:23:00Z"
                   video_status:
                     ready: 5
                     validating: 2
@@ -2497,8 +2812,8 @@ components:
                       error_message: Video indexing has failed. Please try again.
                 - index_id: 66ed1ed7046a96796303a06f
                   index_name: my sample index
-                  created_at: '2024-09-22T13:25:00Z'
-                  ended_at: '2024-09-24T13:26:00Z'
+                  created_at: "2024-09-22T13:25:00Z"
+                  ended_at: "2024-09-24T13:26:00Z"
                   video_status:
                     ready: 10
                     validating: 0
@@ -2515,7 +2830,7 @@ components:
         application/json:
           schema:
             allOf:
-              - $ref: '#/components/schemas/SearchResults'
+              - $ref: "#/components/schemas/SearchResults"
               - type: object
                 properties:
                   page_info:
@@ -2531,28 +2846,28 @@ components:
                         type: string
                         description: |
                           A string representing the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the page expires.
-                        example: '2024-03-01T00:00:00Z'
+                        example: "2024-03-01T00:00:00Z"
                       total_results:
                         type: integer
                         description: |
                           The total number of results. When grouping by video, this field represents the total number of video clips matching your query. Otherwise , this field represents the total number of videos.
                         example: 100
                       total_inner_matches:
-                        $ref: '#/components/schemas/total_inner_matches'
+                        $ref: "#/components/schemas/total_inner_matches"
                       next_page_token:
-                        $ref: '#/components/schemas/next_page_token'
+                        $ref: "#/components/schemas/next_page_token"
                       prev_page_token:
-                        $ref: '#/components/schemas/prev_page_token'
+                        $ref: "#/components/schemas/prev_page_token"
                     example:
                       limit_per_page: 10
-                      page_expires_at: '2024-03-01T00:00:00Z'
+                      page_expires_at: "2024-03-01T00:00:00Z"
                       total_results: 100
                       next_page_token: d1a8f7bd-31c8-4d55-9bb7-c1473de4b2dc-1
                       prev_page_token: e2b9f8ac-42d7-4e66-8cc9-d2584fb3a9e0-1
                 example:
                   page_info:
                     limit_per_page: 10
-                    page_expires_at: '2024-03-01T00:00:00Z'
+                    page_expires_at: "2024-03-01T00:00:00Z"
                     total_results: 100
                     next_page_token: d1a8f7bd-31c8-4d55-9bb7-c1473de4b2dc-1
                     prev_page_token: e2b9f8ac-42d7-4e66-8cc9-d2584fb3a9e0-1
@@ -2574,17 +2889,17 @@ components:
       description: Successfully performed a search request.
       headers:
         X-Ratelimit-Limit:
-          $ref: '#/components/headers/X-Ratelimit-Limit'
+          $ref: "#/components/headers/X-Ratelimit-Limit"
         X-Ratelimit-Remaining:
-          $ref: '#/components/headers/X-Ratelimit-Remaining'
+          $ref: "#/components/headers/X-Ratelimit-Remaining"
         X-Ratelimit-Used:
-          $ref: '#/components/headers/X-Ratelimit-Used'
+          $ref: "#/components/headers/X-Ratelimit-Used"
         X-Ratelimit-Reset:
-          $ref: '#/components/headers/X-Ratelimit-Reset'
+          $ref: "#/components/headers/X-Ratelimit-Reset"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SearchResults'
+            $ref: "#/components/schemas/SearchResults"
           example:
             search_pool:
               total_count: 10
@@ -2610,6 +2925,7 @@ components:
                 example: https://project-one-thumbnail.s3.us-west-2.amazonaws.com/6320748774fed2f3511f2a92/10.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYRWJPOVHXE5SJ77T%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T075213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=46b3bac13fb8b022313244780c238cb6bfc53eddcbee3be23a8d2dd22d99543e
           example:
             thumbnail: https://project-one-thumbnail.s3.us-west-2.amazonaws.com/6320748774fed2f3511f2a92/10.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYRWJPOVHXE5SJ77T%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T075213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=46b3bac13fb8b022313244780c238cb6bfc53eddcbee3be23a8d2dd22d99543e
+
     getVideoVectorsResponse:
       description: The video vectors in the specified index have successfully been retrieved.
       content:
@@ -2620,21 +2936,21 @@ components:
                 type: array
                 description: An array that contains up to `page_limit` videos.
                 items:
-                  $ref: '#/components/schemas/videoVector'
+                  $ref: "#/components/schemas/videoVector"
                 example:
                   - _id: 639963a1ce36463e0199c8c7
-                    created_at: '2024-01-09T11:11:20.463Z'
-                    updated_at: '2024-01-09T11:17:15.296Z'
-                    indexed_at: '2024-01-09T11:17:15.296Z'
+                    created_at: "2024-01-09T11:11:20.463Z"
+                    updated_at: "2024-01-09T11:17:15.296Z"
+                    indexed_at: "2024-01-09T11:17:15.296Z"
                     metadata:
                       duration: 8716.8969
                       filename: 01.mp4
               page_info:
-                $ref: '#/components/schemas/page_info'
+                $ref: "#/components/schemas/page_info"
             example:
               data:
                 - _id: 62a17bf847f5678267ec10cc
-                  created_at: '2022-06-09T04:50:00.879Z'
+                  created_at: "2022-06-09T04:50:00.879Z"
                   index_id: 62a0906d47f5678267ec10a6
                   metadata:
                     duration: 531.998133
@@ -2642,9 +2958,9 @@ components:
                     height: 400
                     width: 854
                   status: ready
-                  updated_at: '2022-06-09T04:55:57.256Z'
+                  updated_at: "2022-06-09T04:55:57.256Z"
                 - _id: 62a17bce47f5678267ec10c6
-                  created_at: '2022-06-09T04:49:20.001Z'
+                  created_at: "2022-06-09T04:49:20.001Z"
                   index_id: 62a0906d47f5678267ec10a6
                   metadata:
                     duration: 741.875
@@ -2652,7 +2968,7 @@ components:
                     height: 480
                     width: 854
                   status: ready
-                  updated_at: '2022-06-09T04:54:10.345Z'
+                  updated_at: "2022-06-09T04:54:10.345Z"
               page_info:
                 limit_per_page: 10
                 page: 1
@@ -2671,15 +2987,15 @@ components:
               created_at:
                 type: string
                 description: A string indicating the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the video indexing task was created.
-                example: '2024-01-09T11:11:20.463Z'
+                example: "2024-01-09T11:11:20.463Z"
               updated_at:
                 type: string
                 description: A string indicating the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the corresponding video indexing task was last updated. The platform updates this field every time the corresponding video indexing task transitions to a different state.
-                example: '2024-01-09T11:17:15.296Z'
+                example: "2024-01-09T11:17:15.296Z"
               indexed_at:
                 type: string
                 description: A string indicating the date and time, in the RFC 3339 format ("YYYY-MM-DDTHH:mm:ssZ"), that the video indexing task has been completed.
-                example: '2024-01-09T11:17:15.296Z'
+                example: "2024-01-09T11:17:15.296Z"
               system_metadata:
                 type: object
                 description: System-generated metadata about the video.
@@ -2715,7 +3031,7 @@ components:
                   rating: 9.3
                   needsReview: true
               hls:
-                $ref: '#/components/schemas/HLSObject'
+                $ref: "#/components/schemas/HLSObject"
               embedding:
                 type: object
                 description: Contains the embedding and the associated information. The platform returns this field when the `embedding_option` parameter is specified in the request.
@@ -2733,7 +3049,7 @@ components:
                         type: array
                         description: An array of objects that contains the embeddings for each individual segment.
                         items:
-                          $ref: '#/components/schemas/VideoSegment'
+                          $ref: "#/components/schemas/VideoSegment"
                         example:
                           - start_offset_sec: 0
                             end_offset_sec: 7.5666666
@@ -2766,12 +3082,12 @@ components:
                           - 0.030509098
                           - 0.032282468
               transcription:
-                $ref: '#/components/schemas/TranscriptionData'
+                $ref: "#/components/schemas/TranscriptionData"
             example:
               _id: 61e17be5777e6caec646fa07
-              created_at: '2022-01-14T13:34:29Z'
-              updated_at: '2022-01-14T13:34:29Z'
-              indexed_at: '2022-01-14T14:05:55Z'
+              created_at: "2022-01-14T13:34:29Z"
+              updated_at: "2022-01-14T13:34:29Z"
+              indexed_at: "2022-01-14T14:05:55Z"
               system_metadata:
                 duration: 3747.841667
                 filename: IOKgzkakhlk.mp4
@@ -2788,7 +3104,7 @@ components:
                 thumbnail_urls:
                   - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000001.jpg
                 status: COMPLETE
-                updated_at: '2024-01-16T07:59:40.879Z'
+                updated_at: "2024-01-16T07:59:40.879Z"
               embedding:
                 model_name: Marengo-retrieval-2.7
                 video_embedding:
@@ -2797,29 +3113,27 @@ components:
                       end_offset_sec: 7.5666666
                       embedding_option: visual-text
                       embedding_scope: clip
-                      float:
-                        - -0.04747168
-                        - 0.030509098
-                        - 0.032282468
+                      float: [-0.04747168, 0.030509098, 0.032282468]
               transcription:
                 - start: 0
                   end: 10.5
-                  value: Hello, how are you?
+                  value: "Hello, how are you?"
                 - start: 10.5
                   end: 15.2
-                  value: I'm fine, thank you.
+                  value: "I'm fine, thank you."
+
     getIndexResponse:
       description: The specified index has successfully been retrieved.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Index'
+            $ref: "#/components/schemas/Index"
           example:
             _id: 62d9bafa90077fc60af827a0
             index_name: myIndex
-            created_at: '2024-01-09T11:11:20.463Z'
-            updated_at: '2024-01-09T11:17:15.296Z'
-            expires_at: '2024-04-08T11:11:20.463Z'
+            created_at: "2024-01-09T11:11:20.463Z"
+            updated_at: "2024-01-09T11:17:15.296Z"
+            expires_at: "2024-04-08T11:11:20.463Z"
             video_count: 12
             total_duration: 8716.8969
             models:
@@ -2843,10 +3157,10 @@ components:
                 type: array
                 description: An array that contains up to `page_limit` tasks.
                 items:
-                  $ref: '#/components/schemas/videoIndexingTask'
+                  $ref: "#/components/schemas/videoIndexingTask"
                 example:
                   - _id: 62a17bf847f5678267ec10cc
-                    created_at: '2022-06-09T04:50:00.879Z'
+                    created_at: "2022-06-09T04:50:00.879Z"
                     index_id: 62a0906d47f5678267ec10a6
                     metadata:
                       duration: 531.998133
@@ -2859,13 +3173,13 @@ components:
                 type: object
                 properties:
                   limit_per_page:
-                    $ref: '#/components/schemas/limit_per_page_simple'
+                    $ref: "#/components/schemas/limit_per_page_simple"
                   page:
-                    $ref: '#/components/schemas/page'
+                    $ref: "#/components/schemas/page"
                   total_page:
-                    $ref: '#/components/schemas/total_page'
+                    $ref: "#/components/schemas/total_page"
                   total_results:
-                    $ref: '#/components/schemas/total_results'
+                    $ref: "#/components/schemas/total_results"
                 example:
                   limit_per_page: 10
                   page: 1
@@ -2874,7 +3188,7 @@ components:
           example:
             data:
               - _id: 62a17bf847f5678267ec10cc
-                created_at: '2022-06-09T04:50:00.879Z'
+                created_at: "2022-06-09T04:50:00.879Z"
                 index_id: 62a0906d47f5678267ec10a6
                 metadata:
                   duration: 531.998133
@@ -2882,9 +3196,9 @@ components:
                   height: 400
                   width: 854
                 status: ready
-                updated_at: '2022-06-09T04:55:57.256Z'
+                updated_at: "2022-06-09T04:55:57.256Z"
               - _id: 62a17bce47f5678267ec10c6
-                created_at: '2022-06-09T04:49:20.001Z'
+                created_at: "2022-06-09T04:49:20.001Z"
                 index_id: 62a0906d47f5678267ec10a6
                 metadata:
                   duration: 741.875
@@ -2892,7 +3206,7 @@ components:
                   height: 480
                   width: 854
                 status: ready
-                updated_at: '2022-06-09T04:54:10.345Z'
+                updated_at: "2022-06-09T04:54:10.345Z"
             page_info:
               limit_per_page: 10
               page: 1
@@ -2904,23 +3218,23 @@ components:
         application/json:
           schema:
             allOf:
-              - $ref: '#/components/schemas/videoIndexingTask'
+              - $ref: "#/components/schemas/videoIndexingTask"
               - type: object
                 properties:
                   hls:
-                    $ref: '#/components/schemas/HLSObject'
+                    $ref: "#/components/schemas/HLSObject"
                 example:
                   hls:
                     video_url: https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/stream/c924f34a-144e-41df-bf2a-c693703fa134.m3u8
                     thumbnail_urls:
                       - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000001.jpg
                     status: COMPLETE
-                    updated_at: '2024-01-16T07:59:40.879Z'
+                    updated_at: "2024-01-16T07:59:40.879Z"
           example:
             _id: 61e1789761c43d6d9b7362f3
             video_id: 61e1789761c43d6d9b7362f3
-            created_at: '2022-01-14T13:20:22.986Z'
-            updated_at: '2022-01-17T08:35:21.639Z'
+            created_at: "2022-01-14T13:20:22.986Z"
+            updated_at: "2022-01-17T08:35:21.639Z"
             index_id: 61e165b061c43d6d9b73627b
             metadata:
               duration: 4334.0297
@@ -2933,7 +3247,7 @@ components:
               thumbnail_urls:
                 - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000001.jpg
               status: COMPLETE
-              updated_at: '2024-01-16T07:59:40.879Z'
+              updated_at: "2024-01-16T07:59:40.879Z"
     getIndexesResponse:
       description: The indexes have successfully been retrieved.
       content:
@@ -2944,13 +3258,13 @@ components:
                 type: array
                 description: An array that contains up to `page_limit` indexes.
                 items:
-                  $ref: '#/components/schemas/Index'
+                  $ref: "#/components/schemas/Index"
                 example:
                   - _id: 62d85fe7340fa665f1fda5dd
                     index_name: index-01
-                    created_at: '2024-01-09T11:11:20.463Z'
-                    updated_at: '2024-01-09T11:17:15.296Z'
-                    expires_at: '2024-04-08T11:11:20.463Z'
+                    created_at: "2024-01-09T11:11:20.463Z"
+                    updated_at: "2024-01-09T11:17:15.296Z"
+                    expires_at: "2024-04-08T11:11:20.463Z"
                     video_count: 2
                     total_duration: 1363.76
                     models:
@@ -2959,14 +3273,14 @@ components:
                           - visual
                           - audio
               page_info:
-                $ref: '#/components/schemas/page_info'
+                $ref: "#/components/schemas/page_info"
             example:
               data:
                 - _id: 62d85fe7340fa665f1fda5dd
                   index_name: index-01
-                  created_at: '2024-01-09T11:11:20.463Z'
-                  updated_at: '2024-01-09T11:17:15.296Z'
-                  expires_at: '2024-04-08T11:11:20.463Z'
+                  created_at: "2024-01-09T11:11:20.463Z"
+                  updated_at: "2024-01-09T11:17:15.296Z"
+                  expires_at: "2024-04-08T11:11:20.463Z"
                   video_count: 2
                   total_duration: 1363.76
                   models:
@@ -2982,9 +3296,9 @@ components:
                         - audio
                 - _id: 62d858ee340fa665f1fda5d8
                   index_name: index-02
-                  created_at: '2024-01-09T11:11:20.463Z'
-                  updated_at: '2024-01-09T11:17:15.296Z'
-                  expires_at: '2024-04-08T11:11:20.463Z'
+                  created_at: "2024-01-09T11:11:20.463Z"
+                  updated_at: "2024-01-09T11:17:15.296Z"
+                  expires_at: "2024-04-08T11:11:20.463Z"
                   video_count: 1
                   total_duration: 579.12
                   models:
@@ -3102,6 +3416,7 @@ components:
             code: unauthorized_request
             message: You are not authorized to access this resource.
             docs_url: https://docs.twelvelabs.io/reference/error-codes
+
     genericError:
       description: The request has failed.
       content:
@@ -3153,7 +3468,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/EmbeddingResponse'
+            $ref: "#/components/schemas/EmbeddingResponse"
     retrieveVideoEmbeddingResponse:
       description: |
         Video embeddings have successfully been retrieved.
@@ -3161,20 +3476,20 @@ components:
         application/json:
           schema:
             allOf:
-              - $ref: '#/components/schemas/VideoEmbeddingTask'
+              - $ref: "#/components/schemas/VideoEmbeddingTask"
               - type: object
                 properties:
                   video_embedding:
                     type: object
                     properties:
                       metadata:
-                        $ref: '#/components/schemas/VideoEmbeddingMetadata'
+                        $ref: "#/components/schemas/VideoEmbeddingMetadata"
                       segments:
                         type: array
                         description: |
                           An array of objects containing the embeddings for each video segment and the associated information.
                         items:
-                          $ref: '#/components/schemas/VideoSegment'
+                          $ref: "#/components/schemas/VideoSegment"
                         example:
                           - start_offset_sec: 0
                             end_offset_sec: 6
@@ -3203,7 +3518,7 @@ components:
                   _id: 663e16ac4d11aff765088b3a
                   model_name: Marengo-retrieval-2.7
                   status: ready
-                  created_at: '2024-03-01T00:00:00Z'
+                  created_at: "2024-03-01T00:00:00Z"
                   video_embedding:
                     segments:
                       - start_offset_sec: 0
@@ -3245,7 +3560,7 @@ components:
             _id: 663e16ac4d11aff765088b3a
             model_name: Marengo-retrieval-2.7
             status: ready
-            created_at: '2024-03-01T00:00:00Z'
+            created_at: "2024-03-01T00:00:00Z"
             video_embedding:
               segments:
                 - start_offset_sec: 0
@@ -3316,12 +3631,12 @@ components:
                 description: |
                   An array that contains up to `page_limit` video embedding tasks.
                 items:
-                  $ref: '#/components/schemas/VideoEmbeddingTask'
+                  $ref: "#/components/schemas/VideoEmbeddingTask"
                 example:
                   - _id: 66f537778d9641fe5a0d101f
                     model_name: Marengo-retrieval-2.7
                     status: processing
-                    created_at: '2024-09-26T10:29:19.968Z'
+                    created_at: "2024-09-26T10:29:19.968Z"
                     video_embedding:
                       metadata:
                         input_filename: 01.mp4
@@ -3342,13 +3657,13 @@ components:
                 type: object
                 properties:
                   limit_per_page:
-                    $ref: '#/components/schemas/limit_per_page_simple'
+                    $ref: "#/components/schemas/limit_per_page_simple"
                   page:
-                    $ref: '#/components/schemas/page'
+                    $ref: "#/components/schemas/page"
                   total_page:
-                    $ref: '#/components/schemas/total_page'
+                    $ref: "#/components/schemas/total_page"
                   total_results:
-                    $ref: '#/components/schemas/total_results'
+                    $ref: "#/components/schemas/total_results"
                 example:
                   limit_per_page: 10
                   page: 1
@@ -3359,7 +3674,7 @@ components:
               - _id: 66f537778d9641fe5a0d101f
                 model_name: Marengo-retrieval-2.7
                 status: processing
-                created_at: '2024-09-26T10:29:19.968Z'
+                created_at: "2024-09-26T10:29:19.968Z"
                 video_embedding:
                   metadata:
                     input_filename: 01.mp4
@@ -3370,7 +3685,7 @@ components:
               - _id: 66f535874bd2802fc13293f4
                 model_name: Marengo-retrieval-2.7
                 status: processing
-                created_at: '2024-09-26T10:21:04.157Z'
+                created_at: "2024-09-26T10:21:04.157Z"
                 video_embedding:
                   metadata:
                     input_filename: 01.mp4
@@ -3381,7 +3696,7 @@ components:
               - _id: 66f534fd4bd2802fc13293ee
                 model_name: Marengo-retrieval-2.7
                 status: processing
-                created_at: '2024-09-26T10:18:44.866Z'
+                created_at: "2024-09-26T10:18:44.866Z"
                 video_embedding:
                   metadata:
                     input_filename: 01.mp4
@@ -3422,7 +3737,7 @@ components:
                   An object containing the metadata associated with the embedding.
                 properties:
                   metadata:
-                    $ref: '#/components/schemas/VideoEmbeddingMetadata'
+                    $ref: "#/components/schemas/VideoEmbeddingMetadata"
                 example:
                   metadata:
                     input_filename: /Users/myuser/myvideo.mp4
@@ -3487,180 +3802,16 @@ components:
         application/json:
           schema:
             oneOf:
-              - type: object
-                description: |
-                  When the value of the `type` parameter is set to `summary`, the response is as follows:
-                title: Summary
-                properties:
-                  id:
-                    description: |
-                      Unique identifier of the response.
-                    type: string
-                    example: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
-                  summary:
-                    description: |
-                      A brief report of the main points of the video.
-                    type: string
-                    example: |
-                      Black Friday shoppers are shown in a mall, pushing and shoving through the crowds. A news reporter talks about shopping mania and its impact on stores. He mentions that stores are filled to the brim and that the hunt for deals can make people miserable. A woman talks to the camera about how people have lost their minds and how the American dream has become associated with material possessions.
-                  usage:
-                    $ref: '#/components/schemas/TokenUsage'
-                example:
-                  id: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
-                  summary: Black Friday shoppers are shown in a mall, pushing and shoving through the crowds. A news reporter talks about shopping mania and its impact on stores. He mentions that stores are filled to the brim and that the hunt for deals can make people miserable. A woman talks to the camera about how people have lost their minds and how the American dream has become associated with material possessions.
-                  usage:
-                    output_tokens: 100
-              - type: object
-                description: |
-                  When the value of the `type` parameter is set to `chapter`, the response is as follows:
-                title: Chapter
-                properties:
-                  id:
-                    description: |
-                      Unique identifier of the response.
-                    type: string
-                    example: da3cdd02-dff8-4712-a2a9-9b44f342c039
-                  chapters:
-                    description: |
-                      An array that contains details about the detected chapters and their content.
-                    type: array
-                    items:
-                      type: object
-                      description: |
-                        An object that contains details about a chapter. Each chapter has a unique number, start time, end time, title, and summary.
-                      properties:
-                        chapter_number:
-                          description: |
-                            Represents the sequence number of the chapter. Note that this field starts at 0. Ensure to interpret it accordingly in your application.
-                          type: integer
-                          example: 0
-                        start:
-                          description: |
-                            The starting time of the chapter, measured in seconds from the beginning of the video.
-                          type: integer
-                          example: 0
-                        end:
-                          description: |
-                            The ending time of the chapter, measured in seconds from the beginning of the video.
-                          type: integer
-                          example: 30
-                        chapter_title:
-                          description: |
-                            The title of the chapter.
-                          type: string
-                          example: Graduation and Moving Home
-                        chapter_summary:
-                          description: |
-                            A brief summary describing the content of the chapter.
-                          type: string
-                          example: The woman talks about her recent graduation and moving back home.
-                      example:
-                        chapter_number: 0
-                        start: 15
-                        end: 30
-                        chapter_title: Graduation and Moving Home
-                        chapter_summary: The woman talks about her recent graduation and moving back home.
-                    example:
-                      - chapter_number: 0
-                        start: 15
-                        end: 30
-                        chapter_title: Graduation and Moving Home
-                        chapter_summary: The woman talks about her recent graduation and moving back home.
-                      - chapter_number: 1
-                        start: 30
-                        end: 45
-                        chapter_title: Outdoor Adventures
-                        chapter_summary: The woman discusses spending time outdoors and getting a tan.
-                      - chapter_number: 2
-                        start: 45
-                        end: 60
-                        chapter_title: Shopping Hauls
-                        chapter_summary: The woman talks about her recent shopping spree and purchases.
-                  usage:
-                    $ref: '#/components/schemas/TokenUsage'
-                example:
-                  id: 663da73b31cdd0c1f638a8e6
-                  chapters:
-                    - chapter_number: 0
-                      start: 15
-                      end: 30
-                      chapter_title: Graduation and Moving Home
-                      chapter_summary: The woman talks about her recent graduation and moving back home.
-                  usage:
-                    output_tokens: 100
-              - type: object
-                description: |
-                  When the value of the `type` parameter is set to `highlight`, the response is as follows:
-                title: Highlight
-                properties:
-                  id:
-                    description: |
-                      Unique identifier of the response.
-                    type: string
-                    example: 2f2a504f-6956-446c-84d8-29d86f793c66
-                  highlights:
-                    description: |
-                      An array that contains the highlights.
-                    type: array
-                    items:
-                      type: object
-                      description: |
-                        An object that provides a brief snapshot of a specific part of the video.
-                      properties:
-                        start:
-                          description: |
-                            The starting time of the highlight, measured in seconds from the beginning of the video.
-                          type: integer
-                          example: 0
-                        end:
-                          description: |
-                            The ending time of the highlight, measured in seconds from the beginning of the video.
-                          type: integer
-                          example: 30
-                        highlight:
-                          description: |
-                            The tile of the highlight.
-                          type: string
-                          example: A woman vlogs about her summer day, sharing her experience
-                        highlight_summary:
-                          type: string
-                          description: |
-                            A brief description that captures the essence of this part of the video.
-                          example: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
-                      example:
-                        start: 0
-                        end: 30
-                        highlight: A woman vlogs about her summer day, sharing her experience
-                        highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
-                    example:
-                      - start: 0
-                        end: 30
-                        highlight: A woman vlogs about her summer day, sharing her experience
-                        highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
-                      - start: 30
-                        end: 60
-                        highlight: A woman is making a video of her food preparation and tasting.
-                        highlight_summary: A woman demonstrates how to make a delicious bread salad with tomatoes and cheese while explaining the process.
-                  usage:
-                    $ref: '#/components/schemas/TokenUsage'
-                example:
-                  id: 663da73b31cdd0c1f638a8e6
-                  highlights:
-                    - start: 0
-                      end: 30
-                      highlight: A woman vlogs about her summer day, sharing her experience
-                      highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
-                  usage:
-                    output_tokens: 100
-          example:
-            id: 663da73b31cdd0c1f638a8e6
-            highlights:
-              - start: 0
-                end: 30
-                highlight: A woman vlogs about her summer day, sharing her experience
-                highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
-            usage:
-              output_tokens: 100
+              - $ref: "#/components/schemas/SummarizeSummaryResult"
+              - $ref: "#/components/schemas/SummarizeChapterResult"
+              - $ref: "#/components/schemas/SummarizeHighlightResult"
+            discriminator:
+              propertyName: summarize_type
+              mapping:
+                summary: "#/components/schemas/SummarizeSummaryResult"
+                chapter: "#/components/schemas/SummarizeChapterResult"
+                highlight: "#/components/schemas/SummarizeHighlightResult"
+              
     gistResponse:
       description: |
         The gist of the specified video has successfully been generated.
@@ -3721,22 +3872,22 @@ components:
                 type: array
                 items:
                   type: string
-                  example: '#BlackFriday'
+                  example: "#BlackFriday"
                 example:
-                  - '#BlackFriday'
-                  - '#Vlog'
+                  - "#BlackFriday"
+                  - "#Vlog"
               usage:
-                $ref: '#/components/schemas/TokenUsage'
+                $ref: "#/components/schemas/TokenUsage"
             example:
               id: 56dd2567-9b34-4ee9-9fbb-c20fc283e5bf
-              title: 'From Consumerism to Minimalism: A Journey Toward Sustainable Living'
+              title: "From Consumerism to Minimalism: A Journey Toward Sustainable Living"
               topics:
                 - Shopping Vlog Lifestyle
                 - Minimalism Lifestyle
                 - Sustainable Living
               hashtags:
-                - '#BlackFriday'
-                - '#Vlog'
+                - "#BlackFriday"
+                - "#Vlog"
               usage:
                 output_tokens: 100
     cloud-to-cloud-import-videos-response:
@@ -3821,56 +3972,56 @@ components:
               validating:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VideoItem'
+                  $ref: "#/components/schemas/VideoItem"
                 description: An array of videos that are being validated.
                 example:
                   - video_id: 66fcee250f9f7bcce21915a2
                     filename: 1.mp4
-                    created_at: '2024-09-24T13:22:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
               pending:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VideoItem'
+                  $ref: "#/components/schemas/VideoItem"
                 description: An array of videos that are pending.
                 example:
                   - video_id: 66fcee250f9f7bcce21915a2
                     filename: 1.mp4
-                    created_at: '2024-09-24T13:22:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
               queued:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VideoItem'
+                  $ref: "#/components/schemas/VideoItem"
                 description: An array of videos that are queued for import.
                 example:
                   - video_id: 66fcee250f9f7bcce21915a2
                     filename: 1.mp4
-                    created_at: '2024-09-24T13:22:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
               indexing:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VideoItem'
+                  $ref: "#/components/schemas/VideoItem"
                 description: An array of videos that are being indexed.
                 example:
                   - video_id: 66fcee250f9f7bcce21915a2
                     filename: 1.mp4
-                    created_at: '2024-09-24T13:22:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
               ready:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VideoItem'
+                  $ref: "#/components/schemas/VideoItem"
                 description: An array of videos that have successfully been imported.
                 example:
                   - video_id: 66fcee250f9f7bcce21915a2
                     filename: 1.mp4
-                    created_at: '2024-09-24T13:22:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
               failed:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VideoItemFailed'
+                  $ref: "#/components/schemas/VideoItemFailed"
                 description: An array of videos that failed to import.
                 example:
                   - filename: 1.mp4
-                    created_at: '2024-09-24T13:22:00Z'
+                    created_at: "2024-09-24T13:22:00Z"
                     error_message: The video is too big. Please use a video with a size less than %s. The current size is %s.
           example:
             not_imported:
@@ -3879,18 +4030,23 @@ components:
             ready:
               - video_id: VIDEO_ID_1
                 filename: VIDEO_1.mp4
-                created_at: '2024-09-24T13:22:00Z'
+                created_at: "2024-09-24T13:22:00Z"
               - video_id: VIDEO_ID_2
                 filename: VIDEO_2.mp4
-                created_at: '2024-09-24T13:22:00Z'
+                created_at: "2024-09-24T13:22:00Z"
             pending:
               - video_id: VIDEO_ID_3
                 filename: VIDEO_3.mp4
-                created_at: '2024-09-24T13:22:00Z'
+                created_at: "2024-09-24T13:22:00Z"
             failed:
               - filename: VIDEO_4.mp4
-                created_at: '2024-09-24T13:22:00Z'
+                created_at: "2024-09-24T13:22:00Z"
                 error_message: The file is not a valid video file.
+
+  ##########################
+  ###   Request Bodies   ###
+  ##########################
+
   requestBodies:
     createSyncEmbeddingRequest:
       description: |
@@ -4057,7 +4213,13 @@ components:
                   **Max**: 10
                 example: 6
               video_embedding_scope:
-                type: string
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - clip
+                    - video
+                  example: clip
                 description: |
                   Defines the scope of video embedding generation. Valid values are the following:
                   - `clip`: Creates embeddings for each video segment of `video_clip_length` seconds, from `video_start_offset_sec` to `video_end_offset_sec`.
@@ -4071,8 +4233,11 @@ components:
                   ```
 
                   **Default**: `clip`
-                default: clip
-                example: clip
+                example:
+                  - clip
+                  - video
+                default:
+                  - clip
           examples:
             video-embedding-clip:
               summary: Video embedding using clip scope
@@ -4080,6 +4245,7 @@ components:
                 model_name: Marengo-retrieval-2.7
                 video_embedding_scope: clip
                 video_file: /Users/john/Documents/video.mp4
+
     generateTextRepresentationRequest:
       description: |
         Request to generate a text representation of a video.
@@ -4239,7 +4405,23 @@ components:
             type: object
             properties:
               user_metadata:
-                $ref: '#/components/schemas/UserMetadata'
+                $ref: "#/components/schemas/UserMetadata"
+            example:
+              user_metadata:
+                category: recentlyAdded
+                batchNumber: 5
+                rating: 9.3
+                needsReview: true
+    partial-update-video-vector:
+      description: |
+        Request to update the metadata of a video. Delete the fields with a `null` value.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user_metadata:
+                $ref: "#/components/schemas/UserMetadata"
             example:
               user_metadata:
                 category: recentlyAdded
@@ -4339,7 +4521,7 @@ components:
                 default: clip
                 example: clip
               threshold:
-                $ref: '#/components/schemas/threshold_search'
+                $ref: "#/components/schemas/threshold_search"
               sort_option:
                 type: string
                 description: |
@@ -4425,6 +4607,11 @@ components:
 
                   For more details and examples, see the [Filter search results](/v1.3/docs/guides/search/filtering) page.
                 example: '{"id":["66284191ea717fa66a274832"]}'
+              include_user_metadata:
+                type: boolean
+                description: |
+                  Specifies whether to include user-defined metadata in the search results.
+                example: true
             example:
               index_id: 6298d673f1090f1100476d4c
               search_options:
@@ -4519,9 +4706,14 @@ components:
                 description: |
                   This parameter indicates if the platform stores the video for streaming. When set to `true`, the platform stores the video, and you can retrieve its URL by calling the [`GET`](/v1.3/api-reference/videos/retrieve) method of the `/indexes/{index-id}/videos/{video-id}` endpoint. You can then use this URL to access the stream over the <a href="https://en.wikipedia.org/wiki/HTTP_Live_Streaming" target="_blank">HLS</a> protocol.
                 default: true
+              user_metadata:
+                type: string
+                description: |
+                  Metadata that helps you categorize your videos. You can specify a list of keys and values. Keys must be of type `string`, and values can be of the following types: `string`, `integer`, `float` or `boolean`.
+                example: '{"department": "Sales", "target_audience": "New hires"}'
           example:
             index_id: 6298d673f1090f1100476d4c
-            video_file: '@/Users/john/Documents/01.mp4'
+            video_file: "@/Users/john/Documents/01.mp4"
     updateIndex:
       description: |
         Request to update the name of an index.
