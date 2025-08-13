@@ -35,7 +35,7 @@ Reference: Notion — “Unlock Real-Time Video Understanding with VideoDB and T
 ```mermaid
 flowchart LR
   Cam[IP Camera / RTSP] --> VDB[VideoDB RTStream]
-  VDB --> IDX[Scene Indexing (Pegasus 1.2)]
+  VDB --> IDX[Scene Indexing<br>&lpar;Pegasus 1.2&rpar;]
   IDX --> EVT[Event Definition]
   EVT --> ALT[Alert Engine]
   ALT --> WH[Webhook Callback]
