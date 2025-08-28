@@ -9,11 +9,6 @@ info:
   version: 1.3.0
 servers:
   - url: https://api.twelvelabs.io/v1.3
-
-################
-###   Tags   ###
-################
-
 tags:
   - name: Manage indexes
   - name: Upload videos
@@ -22,12 +17,7 @@ tags:
   - name: Create video embeddings
   - name: Analyze videos
   - name: Create text, image, and audio embeddings
-
 paths:
-  #################
-  ###   Tasks   ###
-  #################
-
   /tasks:
     post:
       summary: Create a video indexing task
@@ -46,7 +36,7 @@ paths:
           - **Duration**: For Marengo, it must be between 4 seconds and 2 hours (7,200s). For Pegasus, it must be between 4 seconds and 60 minutes (3600s). In a future release, the maximum duration for Pegasus will be 2 hours (7,200 seconds).
           - **File size**: Must not exceed 2 GB.
             If you require different options, contact us at support@twelvelabs.io.
-          
+
           If both Marengo and Pegasus are enabled for your index, the most restrictive prerequisites will apply.
         </Accordion>
 
@@ -147,7 +137,7 @@ paths:
       summary: Import videos
       description: |
         An import represents the process of uploading and indexing all videos from the specified integration.
-    
+
         This method initiates an asynchronous import and returns two lists:
         - Videos that will be imported.
         - Videos that will not be imported, typically because they do not meet the prerequisites of all enabled video understanding models for your index. Note that the most restrictive prerequisites among the enabled models will apply.
@@ -248,11 +238,6 @@ paths:
           $ref: "#/components/responses/cloud-to-cloud-retrieve-import-logs-response"
         "400":
           $ref: "#/components/responses/genericError"
-
-  ###################
-  ###   Indexes   ###
-  ###################
-
   /indexes:
     post:
       summary: Create an index
@@ -357,7 +342,6 @@ paths:
       summary: Update an index
       description: |
         This method updates the name of the specified index.
-
       operationId: update-index
       tags:
         - Manage indexes
@@ -401,10 +385,6 @@ paths:
           $ref: "#/components/responses/noContentResponse"
         "400":
           $ref: "#/components/responses/genericError"
-  ##########################
-  ###   indexes/videos   ###
-  ##########################
-
   /indexes/{index-id}/videos:
     get:
       summary: List videos
@@ -567,8 +547,12 @@ paths:
           $ref: "#/components/responses/notFound"
     put:
       summary: Update video information
-      description: Use this method to update the metadata of a video such as file name.
+      description: |
+        <Warning>This method is now deprecated. Use the [`PATCH`](/v1.3/api-reference/videos/update) method instead, which provides identical functionality.</Warning>
+
+        Use this method to update the metadata of a video.
       operationId: update-video-information
+      deprecated: true
       tags:
         - Manage videos
       parameters:
@@ -599,7 +583,7 @@ paths:
           $ref: "#/components/responses/genericError"
     patch:
       summary: Partial update video information
-      description: Use this method to update one or more fields of the metadata of a video such as file name. Also, you can delete a field by setting it to `null`.
+      description: Use this method to update one or more fields of the metadata of a video. Also, you can delete a field by setting it to `null`.
       operationId: partial-update-video-information
       tags:
         - Manage videos
@@ -660,11 +644,6 @@ paths:
           $ref: "#/components/responses/noContentResponse"
         "400":
           $ref: "#/components/responses/genericError"
-
-  ####################
-  ###   Generate   ###
-  ####################
-
   /summarize:
     post:
       summary: Summaries, chapters, or highlights
@@ -715,7 +694,6 @@ paths:
         "429":
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
-
   /generate:
     post:
       deprecated: true
@@ -727,84 +705,12 @@ paths:
 
         <Note title="Notes">
         - This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
-        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Streaming response](/v1.3/docs/guides/generate-text-from-video/open-ended-text#streaming-responses) guide.
+        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Open-ended analysis](/v1.3/docs/guides/analyze-videos/open-ended-analysis#streaming-responses) guide.
         </Note>
       parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
       operationId: analyze
-      tags:
-        - Analyze videos
-      requestBody:
-        $ref: '#/components/requestBodies/generateTextRepresentationRequest'
-      responses:
-        '200':
-          description: The specified video has successfully been processed.
-          headers:
-            X-Ratelimit-Limit:
-              $ref: '#/components/headers/X-Ratelimit-Limit'
-            X-Ratelimit-Remaining:
-              $ref: '#/components/headers/X-Ratelimit-Remaining'
-            X-Ratelimit-Used:
-              $ref: '#/components/headers/X-Ratelimit-Used'
-            X-Ratelimit-Reset:
-              $ref: '#/components/headers/X-Ratelimit-Reset'
-            Transfer-Encoding:
-              schema:
-                type: string
-                description: The platform returns this header when the `stream` parameter is set to `true` in the request. It indicates that the response body is sent in chunks.
-                default: chunked
-                example: chunked
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/StreamAnalyzeResponse'
-                  - $ref: '#/components/schemas/NonStreamAnalyzeResponse'
-              examples:
-                non-streaming-response:
-                  summary: Non-streamed response
-                  value:
-                    id: 2a22fd17-7bd4-446a-abd6-b9382cb18f90
-                    data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
-                stream-start-response:
-                  summary: Stream start
-                  value:
-                    event_type: stream_start
-                    metadata:
-                      generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                text-generation-resonse:
-                  summary: Text generation
-                  value:
-                    event_type: text_generation
-                    text: light-hearted moments of cats
-                stream-end-response:
-                  summary: Stream end
-                  value:
-                    event_type: stream_end
-                    metadata:
-                      generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
-                      usage:
-                        output_tokens: 100
-        '400':
-          $ref: '#/components/responses/genericError'
-        '429':
-          description: |
-            If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
-  /analyze:
-    post:
-      summary: Open-ended analysis
-      description: |
-        This endpoint analyzes your videos and creates fully customizable text based on your prompts, including but not limited to tables of content, action items, memos, and detailed analyses.
-
-        <Note title="Notes">
-        - This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
-        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Streaming response](/v1.3/docs/guides/generate-text-from-video/open-ended-text#streaming-responses) guide.
-        </Note>
-      parameters:
-        - $ref: '#/components/parameters/x-api-key'
-        - $ref: '#/components/parameters/Content-Type'
-      operationId: generate-text-representation
       tags:
         - Analyze videos
       requestBody:
@@ -863,11 +769,82 @@ paths:
         "429":
           description: |
             If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
+  /analyze:
+    post:
+      summary: Open-ended analysis
+      description: |
+        This endpoint analyzes your videos and creates fully customizable text based on your prompts, including but not limited to tables of content, action items, memos, and detailed analyses.
 
-  #############################################
-  ###   Text, image, and audio embeddings   ###
-  #############################################
-
+        <Note title="Notes">
+        - This endpoint is rate-limited. For details, see the [Rate limits](/v1.3/docs/get-started/rate-limits) page.
+        - This endpoint supports streaming responses. For details on integrating this feature into your application, refer to the [Open-ended analysis](/v1.3/docs/guides/analyze-videos/open-ended-analysis#streaming-responses) guide.
+        </Note>
+      parameters:
+        - $ref: "#/components/parameters/x-api-key"
+        - $ref: "#/components/parameters/Content-Type"
+      operationId: generate-text-representation
+      tags:
+        - Analyze videos
+      requestBody:
+        $ref: "#/components/requestBodies/generateTextRepresentationRequest"
+      responses:
+        "200":
+          description: |
+            The specified video has successfully been processed.
+            <Note title="Note">
+              The maximum length of the response is 4,096 tokens.
+            </Note>
+          headers:
+            X-Ratelimit-Limit:
+              $ref: "#/components/headers/X-Ratelimit-Limit"
+            X-Ratelimit-Remaining:
+              $ref: "#/components/headers/X-Ratelimit-Remaining"
+            X-Ratelimit-Used:
+              $ref: "#/components/headers/X-Ratelimit-Used"
+            X-Ratelimit-Reset:
+              $ref: "#/components/headers/X-Ratelimit-Reset"
+            Transfer-Encoding:
+              schema:
+                type: string
+                description: The platform returns this header when the `stream` parameter is set to `true` in the request. It indicates that the response body is sent in chunks.
+                default: chunked
+                example: chunked
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/StreamAnalyzeResponse"
+                  - $ref: "#/components/schemas/NonStreamAnalyzeResponse"
+              examples:
+                non-streaming-response:
+                  summary: Non-streamed response
+                  value:
+                    id: 2a22fd17-7bd4-446a-abd6-b9382cb18f90
+                    data: 1. Vlog\n2. Minnesota\n3. Mall of America\n4. Shopping haul\n5. Outdoor adventure
+                stream-start-response:
+                  summary: Stream start
+                  value:
+                    event_type: stream_start
+                    metadata:
+                      generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+                text-generation-resonse:
+                  summary: Text generation
+                  value:
+                    event_type: text_generation
+                    text: light-hearted moments of cats
+                stream-end-response:
+                  summary: Stream end
+                  value:
+                    event_type: stream_end
+                    metadata:
+                      generation_id: 2f6d0bdd-aed8-47b1-8124-3c9d8006cdc9
+                      usage:
+                        output_tokens: 100
+        "400":
+          $ref: "#/components/responses/genericError"
+        "429":
+          description: |
+            If the rate limit is reached, the platform returns an `HTTP 429 - Too many requests` error response. The response body is empty.
   /embed:
     post:
       summary: Create embeddings for text, image, and audio
@@ -893,7 +870,7 @@ paths:
           - `audio_file`: Local audio file.
 
         <Note title="Notes">
-        - The "Marengo-retrieval-2.7" video understanding model generates embeddings for all modalities in the same latent space. This shared space enables any-to-any searches across different types of content.
+        - The Marengo video understanding model generates embeddings for all modalities in the same latent space. This shared space enables any-to-any searches across different types of content.
         - You can create multiple types of embeddings in a single API call.
         - Audio embeddings combine generic sound and human speech in a single embedding. For videos with transcriptions, you can retrieve transcriptions and then [create text embeddings](/v1.3/api-reference/text-image-audio-embeddings/create-text-image-audio-embeddings) from these transcriptions.
         </Note>
@@ -910,11 +887,6 @@ paths:
           $ref: "#/components/responses/createSyncEmbeddingResponse"
         "400":
           $ref: "#/components/responses/genericError"
-
-  ############################
-  ###   Video embeddings   ###
-  ############################
-
   /embed/tasks:
     post:
       summary: Create a video embedding task
@@ -938,7 +910,7 @@ paths:
         </Accordion>
 
         <Note title="Notes">
-        - The "Marengo-retrieval-2.7" video understanding model generates embeddings for all modalities in the same latent space. This shared space enables any-to-any searches across different types of content.
+        - The Marengo video understanding model generates embeddings for all modalities in the same latent space. This shared space enables any-to-any searches across different types of content.
         - Video embeddings are stored for seven days.
         - The platform supports uploading video files that can play without additional user interaction or custom video players. Ensure your URL points to the raw video file, not a web page containing the video. Links to third-party hosting sites, cloud storage services, or videos requiring extra steps to play are not supported.
         </Note>
@@ -1019,11 +991,6 @@ paths:
           $ref: "#/components/responses/retrieveVideoEmbeddingResponse"
         "400":
           $ref: "#/components/responses/genericError"
-
-  #################################
-  ###   Any-to-video search   ###
-  #################################
-
   /search:
     post:
       summary: Make any-to-video search requests
@@ -1044,7 +1011,6 @@ paths:
           - **Format**: JPEG and PNG.
           - **Dimension**: Must be at least 64 x 64 pixels.
           - **Size**: Must not exceed 5MB.
-          - **Object visibility**: Ensure that the objects of interest are visible and occupy at least 50% of the video frame. This helps the platform accurately identify and match the objects.
         </Accordion>
 
         <Note title="Note">
@@ -1102,11 +1068,6 @@ paths:
           $ref: "#/components/responses/searchResultsResponsePageId"
         "400":
           $ref: "#/components/responses/searchResultsError"
-
-#######################
-###   Components   ####
-#######################
-
 components:
   schemas:
     ImportLog:
@@ -1275,11 +1236,11 @@ components:
           value:
             type: string
             description: Text representing the spoken words within this time range.
-            example: "Hello, how are you?"
+            example: Hello, how are you?
       example:
         - start: 10.5
           end: 15.2
-          value: "Hello, how are you?"
+          value: Hello, how are you?
     EmbeddingResponse:
       type: object
       description: |
@@ -1726,7 +1687,6 @@ components:
         - none
       type: string
       example: low
-
     Index:
       title: Index
       description: |
@@ -1735,7 +1695,7 @@ components:
       properties:
         _id:
           type: string
-          description: A string representing the unique identifier of the index. It is assigned by the API when an index is created.
+          description: A string representing the unique identifier of the index. It is assigned by the platform when an index is created.
           example: 663da73b31cdd0c1f638a8e6
         created_at:
           type: string
@@ -1825,7 +1785,7 @@ components:
           properties:
             video_clip_length:
               type: number
-              description: The duration for each clip in seconds, as specified by the `video_clip_length` parameter of the [`POST`](/v1.3/api-reference/video-embeddings/create) method of the `/embed/task` endpoint. Note that the platform automatically truncates video segments shorter than 2 seconds. For a 31-second video divided into 6-second segments, the final 1-second segment will be truncated. This truncation only applies to the last segment if it does not meet the minimum length requirement of 2 seconds.
+              description: The duration for each clip in seconds, as specified by the `video_clip_length` parameter of the [`POST`](/v1.3/api-reference/video-embeddings/create-video-embedding-task) method of the `/embed/task` endpoint. Note that the platform automatically truncates video segments shorter than 2 seconds. For a 31-second video divided into 6-second segments, the final 1-second segment will be truncated. This truncation only applies to the last segment if it does not meet the minimum length requirement of 2 seconds.
               example: 6
             video_embedding_scope:
               type: array
@@ -2068,7 +2028,11 @@ components:
             - https://d2cp8xx7n5vxnu.cloudfront.net/6298aa0b535db125bf6e1d10/64902a28fb01304dd47be3cb/thumbnails/c924f34a-144e-41df-bf2a-c693703fa134.0000003.jpg
         status:
           type: string
-          enum: [PROCESSING, COMPLETE, CANCELED, ERROR]
+          enum:
+            - PROCESSING
+            - COMPLETE
+            - CANCELED
+            - ERROR
           description: |
             A string representing the encoding status of the video file from its original format to a streamable format.
             Possible values:
@@ -2219,7 +2183,6 @@ components:
             The number of tokens in the generated text.
       example:
         output_tokens: 100
-
     UserMetadata:
       type: object
       description: |
@@ -2260,7 +2223,8 @@ components:
       properties:
         summarize_type:
           type: string
-          enum: [summary]
+          enum:
+            - summary
           description: |
             The type of summarize response.
         id:
@@ -2291,7 +2255,8 @@ components:
       properties:
         summarize_type:
           type: string
-          enum: [chapter]
+          enum:
+            - chapter
           description: |
             The type of summarize response.
         id:
@@ -2391,7 +2356,8 @@ components:
       properties:
         summarize_type:
           type: string
-          enum: [highlight]
+          enum:
+            - highlight
           description: |
             The type of summarize response.
         id:
@@ -2470,11 +2436,6 @@ components:
             highlight_summary: The woman talks about her love for getting some sun, despite not tanning well, and shows the camera around her house, mentioning her fake tanner.
         usage:
           output_tokens: 100
-
-  ######################
-  ###   Parameters   ###
-  ######################
-
   parameters:
     video-embedding-task-id:
       name: task_id
@@ -2484,8 +2445,7 @@ components:
       required: true
       schema:
         type: string
-        example: "663da73b31cdd0c1f638a8e6"
-
+        example: 663da73b31cdd0c1f638a8e6
     embedding_option_optional:
       name: embedding_option
       in: query
@@ -2498,17 +2458,18 @@ components:
 
         The platform does not return embeddings if you don't provide this parameter.
 
-        The values you specify in `embedding_option` must be included in the `model_options` defined when the index was created. For example, if `model_options` is set to `visual,` you cannot set `embedding_option` to `audio` or  both `visual-text` and `audio`.
+        The values you specify in `embedding_option` must be included in the `model_options` defined when the index was created. For example, if `model_options` is set to `visual` only, then you cannot set `embedding_option` to `audio` or  both `visual-text` and `audio`.
       required: false
       schema:
         type: array
         items:
           type: string
-          enum: [visual-text, audio]
+          enum:
+            - visual-text
+            - audio
           uniqueItems: true
       style: form
       explode: true
-
     embedding_option:
       name: embedding_option
       in: query
@@ -2523,11 +2484,12 @@ components:
         type: array
         items:
           type: string
-          enum: [visual-text, audio]
+          enum:
+            - visual-text
+            - audio
         uniqueItems: true
       style: form
       explode: true
-
     Content-Type:
       name: Content-Type
       in: header
@@ -2737,10 +2699,6 @@ components:
         type: string
         example: processing
       required: false
-
-  #####################################
-  ###   Reusable response headers   ###
-  #####################################
   headers:
     X-Ratelimit-Limit:
       schema:
@@ -2762,10 +2720,6 @@ components:
         type: number
         example: 1718777276
       description: The time at which the current rate limit window resets, expressed in UTC epoch seconds.
-
-  #####################
-  ###   Responses   ###
-  #####################
   responses:
     cloud-to-cloud-retrieve-import-logs-response:
       description: The import logs have successfully been retrieved.
@@ -2925,7 +2879,6 @@ components:
                 example: https://project-one-thumbnail.s3.us-west-2.amazonaws.com/6320748774fed2f3511f2a92/10.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYRWJPOVHXE5SJ77T%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T075213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=46b3bac13fb8b022313244780c238cb6bfc53eddcbee3be23a8d2dd22d99543e
           example:
             thumbnail: https://project-one-thumbnail.s3.us-west-2.amazonaws.com/6320748774fed2f3511f2a92/10.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAYRWJPOVHXE5SJ77T%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T075213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=46b3bac13fb8b022313244780c238cb6bfc53eddcbee3be23a8d2dd22d99543e
-
     getVideoVectorsResponse:
       description: The video vectors in the specified index have successfully been retrieved.
       content:
@@ -3113,15 +3066,17 @@ components:
                       end_offset_sec: 7.5666666
                       embedding_option: visual-text
                       embedding_scope: clip
-                      float: [-0.04747168, 0.030509098, 0.032282468]
+                      float:
+                        - -0.04747168
+                        - 0.030509098
+                        - 0.032282468
               transcription:
                 - start: 0
                   end: 10.5
-                  value: "Hello, how are you?"
+                  value: Hello, how are you?
                 - start: 10.5
                   end: 15.2
-                  value: "I'm fine, thank you."
-
+                  value: I'm fine, thank you.
     getIndexResponse:
       description: The specified index has successfully been retrieved.
       content:
@@ -3416,7 +3371,6 @@ components:
             code: unauthorized_request
             message: You are not authorized to access this resource.
             docs_url: https://docs.twelvelabs.io/reference/error-codes
-
     genericError:
       description: The request has failed.
       content:
@@ -3811,7 +3765,6 @@ components:
                 summary: "#/components/schemas/SummarizeSummaryResult"
                 chapter: "#/components/schemas/SummarizeChapterResult"
                 highlight: "#/components/schemas/SummarizeHighlightResult"
-              
     gistResponse:
       description: |
         The gist of the specified video has successfully been generated.
@@ -3900,7 +3853,7 @@ components:
             properties:
               failed_files:
                 type: array
-                description: A list of the video files that failed to import. Typically, these files did not meet the upload requirements. To resolve this, review the requirements listed in the [Prerequisites](/v1.3/docs/guides/search#prerequisites) section of the **Search** page.
+                description: A list of the video files that failed to import. Typically, these files did not meet the upload requirements. To resolve this, review the [video requirements](/v1.3/api-reference/tasks/cloud-to-cloud-integrations/create#video-requirements) listed above.
                 items:
                   type: object
                   properties:
@@ -4042,11 +3995,6 @@ components:
               - filename: VIDEO_4.mp4
                 created_at: "2024-09-24T13:22:00Z"
                 error_message: The file is not a valid video file.
-
-  ##########################
-  ###   Request Bodies   ###
-  ##########################
-
   requestBodies:
     createSyncEmbeddingRequest:
       description: |
@@ -4245,7 +4193,6 @@ components:
                 model_name: Marengo-retrieval-2.7
                 video_embedding_scope: clip
                 video_file: /Users/john/Documents/video.mp4
-
     generateTextRepresentationRequest:
       description: |
         Request to generate a text representation of a video.
@@ -4551,9 +4498,6 @@ components:
 
                     - `and`
 
-                    For details and examples, see the [Using multiple sources of information](/v1.3/docs/guides/search/queries/text-queries#visual-and-audio) section.
-
-
                     **Default**: `or`.
                 enum:
                   - or
@@ -4575,11 +4519,11 @@ components:
 
                   **Syntax for filtering**
 
-                  The following table describes the supported data types, operators, and filter syntax: 
+                  The following table describes the supported data types, operators, and filter syntax:
 
                   | Data type | Operator | Description | Syntax |
                   |:----------|:---------|:------------|:-------|
-                  | String | `=` | Matches results equal to the specified value. | `{"field": "value"}` 
+                  | String | `=` | Matches results equal to the specified value. | `{"field": "value"}`
                   | Array of strings | `=` | Matches results with any value in the specified array. Supported only for `id`. | `{"id": ["value1", "value2"]}` |
                   | Numeric (integer, float) | `=`, `lte`, `gte` | Matches results equal to or within a range of the specified value. | `{"field": number}` or `{"field": { "gte": number, "lte": number }}` |
                   | Boolean | `=` | Matches results equal to the specified boolean value. | `{"field": true}` or `{"field": false}`. |
@@ -4595,8 +4539,8 @@ components:
                   | `duration` | Filters based on the duration of the video containing the segment that matches your query. | Number or object with `gte` and `lte` | `{"duration": 600}` or `{"duration": { "gte": 600, "lte": 800 }}` |
                   | `width` | Filters by video width (in pixels). | Number or object with `gte` and `lte` | `{"width": 1920}` or `{"width": { "gte": 1280, "lte": 1920}}` |
                   | `height` | Filters by video height (in pixels). | Number or object with `gte` and `lte`. | `{"height": 1080}` or `{"height": { "gte": 720, "lte": 1080 }}`. |
-                  | `size` | Filters by video size (in bytes) | Number or object with `gte` and `lte`. | `{"size": 1048576}` or `{"size": { "gte": 1048576, "lte": 5242880}}` | 
-                  | `filename` | Filters by the exact file name. | String | `{"filename": "Animal Encounters part 1"}` | 
+                  | `size` | Filters by video size (in bytes) | Number or object with `gte` and `lte`. | `{"size": 1048576}` or `{"size": { "gte": 1048576, "lte": 5242880}}` |
+                  | `filename` | Filters by the exact file name. | String | `{"filename": "Animal Encounters part 1"}` |
 
                   <br/>
                   **User-defined metadata**
@@ -4782,7 +4726,7 @@ components:
                     model_options:
                       type: array
                       description: |
-                        An array that specifies how the platform will process the videos uploaded to this index. For the Marengo and Pegasus models, you can specify one or both of the following model options: `visual` and `audio`. For more details, see the [model options](/v1.3/docs/concepts/model-options) page.
+                        An array that specifies how the platform will process the videos uploaded to this index. For the Marengo and Pegasus models, you can specify one or both of the following model options: `visual` and `audio`. For more details, see the [model options](/v1.3/docs/concepts/modalities#model-options) section.
                       items:
                         type: string
                         example: visual
