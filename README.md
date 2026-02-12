@@ -4,6 +4,14 @@ The Twelve Labs Video Understanding Platform uses state-of-the-art ("SOTA") vide
 
 This repository contains quickstart guides and other resources that show how you can integrate the capabilities of the platform into your applications.
 
+## Get started
+
+To use the platform, you need an API key:
+1. If you don't have an account, [sign up](https://playground.twelvelabs.io/) for a free account. No credit card is required to use the Free plan. This plan allows you to index up to 600 minutes of videos, which is sufficient for a small project.
+2. Go to the [API Keys](https://playground.twelvelabs.io/dashboard/api-keys) page.
+3. If you need to create a new key, select the **Create API Key** button. Enter a name and set the expiration period. The default is 12 months.
+4. Select the **Copy** icon next to your key to copy it to your clipboard.
+
 ## Start building 
 
 Explore these quickstart notebooks containing complete, executable code that you can customize and extend:
