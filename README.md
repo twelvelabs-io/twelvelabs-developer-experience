@@ -22,7 +22,6 @@ Explore these quickstart notebooks containing complete, executable code that you
 | Analyze | Analyze videos and generate text based on their content. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Analyze.ipynb) |
 | Embed | Create multimodal embeddings. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/twelvelabs-io/twelvelabs-developer-experience/blob/main/quickstarts/TwelveLabs_Quickstart_Embeddings.ipynb) |
 
-<!-- TODO: Image queries -->
 
 ## Integration methods 
 
@@ -31,11 +30,11 @@ Access the platform using any of these methods:
 **Python SDK**
 - [Jupyter Notebooks](./quickstarts)
 - [SDK Reference](https://docs.twelvelabs.io/reference/python-sdk)
-- [Guides](https://docs.twelvelabs.io/)
+- [Guides](https://docs.twelvelabs.io/docs/guides)
 
 **Node.js SDK**
-- [SDK Reference](https://docs.twelvelabs.io/reference/node-js-sd)
-- [Guides](https://docs.twelvelabs.io/)
+- [SDK Reference](https://docs.twelvelabs.io/reference/node-js-sdk)
+- [Guides](https://docs.twelvelabs.io/docs/guides)
 
 **REST API**
 - [OpenAPI Specification](./api-spec/openapi-1.3.yaml)
